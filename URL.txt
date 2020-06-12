@@ -1,8 +1,0 @@
-http://192.168.0.107:3000/customerquery   //BIOCORE
-
-http://10.131.78.100:3000/customerquery // Utem student
-
-http://192.168.43.157:3000/customerquery // hotspot
-
-http://192.168.0.146:3000/customerquery // home
-
