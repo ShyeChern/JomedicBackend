@@ -3,96 +3,142 @@
 /*
     1 = success
 */
-var MM = function(msg){
-    
+var MM = function (msg) {
+
     this.msj = msg.msj;
 }
 
 var ress;
 
-MM.showMessage = function(msg,result){
-    
-    if(msg != null  ){
-        switch(msg) {
-            
+MM.showMessage = function (msg, result) {
+
+    if (msg != null) {
+        switch (msg) {
+
             case 'ER_DUP_ENTRY':
-                ress = {status : "duplicate"};
+                ress = { status: "duplicate" };
                 result(ress);
-            break;
+                break;
 
             case 'ER_NO_DEFAULT_FOR_FIELD':
-                ress = {status : "emptyValue"};
+                ress = { status: "emptyValue" };
                 result(ress);
-            break;
+                break;
 
             case 'B':
-                ress = {status : "incompleteDataReceived"};
+                ress = { status: "incompleteDataReceived" };
                 result(ress);
-            break;
+                break;
 
             case 'F':
-                ress = {status : "fail"};
+                ress = { status: "FAIL" };
                 result(ress);
-            break;
+                break;
 
             case '1':
-                ress = {status : "success"};
+                ress = { status: "SUCCESS" };
                 result(ress);
-            break;
+                break;
 
             case 'TXN':
-                ress = {status : "ERROR901"};
+                ress = { status: "ERROR901" };
                 result(ress);
-            break;
+                break;
 
             case 'balQ':
-                ress = {status : "QUOTAFULL"};
+                ress = { status: "QUOTAFULL" };
                 result(ress);
-            break;
+                break;
 
             case 'ALR':
-                ress = {status : "ALREADYREGISTER"};
+                ress = { status: "ALREADYREGISTER" };
                 result(ress);
-            break;
+                break;
 
             case 'ER_BAD_FIELD_ERROR':
-                ress = {status : "COLUMNWRONG"};
+                ress = { status: "COLUMNWRONG" };
                 result(ress);
-            break;
+                break;
 
             case 'NE':
-                ress = {status : "NOTFOUND"};
+                ress = { status: "NOTFOUND" };
                 result(ress);
-            break;
+                break;
 
             case 'TQN':
-                ress = {status : "TOTALQNULL"};
+                ress = { status: "TOTALQNULL" };
                 result(ress);
-            break;
+                break;
 
             case 'QN':
-                ress = {status : "QUOTANULL"};
+                ress = { status: "QUOTANULL" };
                 result(ress);
-            break;
+                break;
 
             case 'EXDE':
-                ress = {status : "EMAILXDE"};
+                ress = { status: "EMAILXDE" };
                 result(ress);
-            break;
+                break;
+
+            case 'CREDXDE':
+                ress = { status: "IDXDE" };
+                result(ress);
+                break;
 
             case 'PXDE':
-                ress = {status : "PASSWORDWRONG"};
+                ress = { status: "PASSWORDWRONG" };
                 result(ress);
-            break;
+                break;
 
-            default :
-                ress = {status : msg};
+            case 'AVAIL':
+                ress = { status: "AVAILABLE" };
                 result(ress);
-            break;
+                break;
+
+            case 'WRONG':
+                ress = { status: "WRONGDATA" };
+                result(ress);
+                break;
+            
+            case 'WRONGT':
+                ress = { status: "WRONGTAC" };
+                result(ress);
+                break;
+
+            case 'EXP':
+                ress = { status: "EXPIREDTAC" };
+                result(ress);
+                break;
+            
+            case 'FTAC':
+                ress = { status: "FAILUPDATETAC" };
+                result(ress);
+                break;
+            
+            case 'ER_TRUNCATED_WRONG_VALUE_FOR_FIELD':
+                ress = { status: "INCORRECTDATATYPE" };
+                result(ress);
+                break;
+            
+            case 'ER_PARSE_ERROR':
+                ress = { status: "QUERYERROR" };
+                result(ress);
+                break;
+
+            case 'ER_TRUNCATED_WRONG_VALUE':
+                ress = { status: "INCORRECTDATAFORMAT" };
+                result(ress);
+                break;
+
+                
+            default:
+                ress = { status: msg };
+                result(ress);
+                break;
         }
 
     }
-    
+
 }
 
 

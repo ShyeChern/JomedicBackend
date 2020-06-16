@@ -9,11 +9,16 @@ module.exports = (app) => {
 
     var customerC = require('../app/controller/JomMedic/Customer/customerController');
     app.post('/customerquery', upload.single('file'), customerC.custfunction);
+    
+    var providerCtrl = require('../app/controller/providerCtrl');
+    var unqCtrl = require('../app/controller/UniqueNumCtrl');
+    var loginCtrl = require('../app/controller/loginCtrl');
+    var ewallCtrl = require('../app/controller/ewalletCtrl');
 
-    var eWalletC = require('../app/controller/JomMedic/e_Wallet/ewalletController');
-    app.post('/ewalletquery', eWalletC.ewallfunction);
-
-    var providerC = require('../app/controller/JomMedic/Provider/providerController');
-    app.post('/providerquery', providerC.providerfunction);
-
+    app.post('/query', providerCtrl.providerCheckPost);
+    app.post('/AUT', providerCtrl.auditTrailCtrl);
+    app.post('/UNQ',unqCtrl.uniqueNumberGen);
+    app.post('/SIGNIN',loginCtrl.loginPost);
+    app.post('/EWALL',ewallCtrl.ewalletCheckPost);
+   
 };

@@ -10,8 +10,8 @@ var AUT = function(aut) {
   AUT.create = function(newData, result) {
     pool.getConnection(function(err, con) {
       if (err) throw err; // not connected!
-      con.query('INSERT INTO audit_trail (id,tstamp,txn_cd) VALUES (?,?,?)',
-     [newData.id,newData.tstamp,newData.txn_cd ], function(err, res) {
+      con.query('INSERT INTO audit_trail (id,tstamp,txn_cd,activity,created_by,created_date) VALUES (?,?,?,?,?,?)',
+     [newData.id,newData.tstamp,newData.txn_cd,newData.activity,newData.created_by,newData.tstamp ], function(err, res) {
       if (err) {
         con.destroy();
         result(err, null);
