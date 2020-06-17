@@ -897,6 +897,35 @@ const providerCheckPost = function (req, res) {
                     });
                 }
                 break;
+
+                case 'MEDPRO22':
+                if (!datas.tenantId || datas.tenantId == "" || datas.tenantType == "" || !datas.tenantType) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    var tenant = [];
+                    tenant.tenant_id = datas.tenantId;
+                    tenant.tenant_type = datas.tenantType;
+                    tenant.created_date = tstamp;
+                    
+
+                    Provid.getTenant(tenant, function (error, returnData) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.status(400).send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(returnData, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
         }
 
 

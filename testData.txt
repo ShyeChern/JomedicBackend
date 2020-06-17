@@ -1,0 +1,690 @@
+Check duplicate
+TXN : MEDPRO01
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO01",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"shay7682"
+      
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "duplicate"
+}
+
+/////////////////////////////////////////////////////////////////////
+Add user
+TXN : MEDPRO02
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO02",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"panda",
+      "userName" : "pandalela",
+      "title" : "Abang Kawasan",
+      "password" : "pandapower",
+      "question" : "apa ada belakang saya",
+      "answer" : "tapak kaki kucing",
+      "motherName" : "Tidak di ketahui",
+      "userStatus" : "001",
+      "loginStatus" : "001",
+      "idCategory" : "001",
+      "remoteCount" : "0",
+      "userType" : "001",
+      "userCategory" : "001",
+      "userClasificationCd" : "001",
+      "status" : "1",
+      "roomNo" : "01",
+      "startDate" : "",
+      "endDate" : "",
+      "remoteLogoutDate" : ""
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "duplicate"
+}
+/////////////////////////////////////////////////////////////////////
+Add profile User
+TXN : MEDPRO03
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO03",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"panda",
+      "userName" : "pandalela",
+      "title" : "Abang Kawasan",
+      "gender" : "MALE",
+      "DOB" : "2013-07-06",
+      "occupation" : "Abang kawasan",
+      "homeAddress1" : "no59,kampung sungai rambut",
+      "homeAddress2" : "86400 parit raja",
+      "homeAddress3" : "batu pahat,johor",
+      "district" : "Batu Pahat",
+      "state" : "Johor",
+      "country" : "Malaysia",
+      "email" : "panda@email.com",
+      "postcode" : "86400",
+      "mobileNo" : "N/A",
+      "picture" : "",
+      "idImg" : "",
+      "nationality" : ""
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "duplicate"
+}
+/////////////////////////////////////////////////////////////////////
+Get User
+TXN : MEDPRO04
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO04",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"panda"
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "user_id": "panda",
+            "user_name": "pandalela",
+            "title": "Abang Kawasan",
+            "password": "5aa4a25ad023a68486594b1cf93a0c73",
+            "question": "apa ada belakang saya",
+            "answer": "tapak kaki kucing",
+            "mother_name": "Tidak di ketahui",
+            "user_status": "001",
+            "login_status": "001",
+            "id_category_cd": "001",
+            "start_date": "0000-00-00 00:00:00",
+            "end_date": "0000-00-00 00:00:00",
+            "remote_logout_date": "0000-00-00 00:00:00",
+            "remote_count": 0,
+            "user_type": "001",
+            "user_category": "001",
+            "user_classification_cd": "undefined",
+            "status": "1",
+            "room_no": "01",
+            "gender_cd": "MALE",
+            "nationality_cd": "001",
+            "DOB": "2013-07-05T16:00:00.000Z",
+            "occupation_cd": "Abang kawasan",
+            "home_address1": "no59,kampung sungai rambut",
+            "home_address2": "86400 parit raja",
+            "home_address3": "batu pahat,johor",
+            "district": "Batu Pahat",
+            "state": "Johor",
+            "country": "Malaysia",
+            "postcode": "86400",
+            "mobile_no": "",
+            "email": "undefined",
+            "picture": "",
+            "id_img": ""
+        }
+    ]
+}
+/////////////////////////////////////////////////////////////////////
+
+update user
+TXN : MEDPRO05
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO05",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"panda",
+      "userName" : "pandalela",
+      "title" : "Abang Kawasan",
+      "password" : "pandapower",
+      "question" : "apa ada belakang saya",
+      "answer" : "tapak kaki kucing",
+      "motherName" : "Tidak di ketahui",
+      "userStatus" : "001",
+      "loginStatus" : "001",
+      "idCategory" : "001",
+      "remoteCount" : "0",
+      "userType" : "001",
+      "userCategory" : "001",
+      "userClasificationCd" : "001",
+      "status" : "1",
+      "roomNo" : "01",
+      "startDate" : "",
+      "endDate" : "",
+      "remoteLogoutDate" : ""
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+** please note that picture is in base64 string
+
+update user profile
+TXN : MEDPRO06
+DATA IN --
+{ 
+   "txn_cd":"MEDPRO06",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "userID":"panda",
+      "userName" : "pandalela",
+      "title" : "Abang Kawasan",
+      "gender" : "MALE",
+      "DOB" : "2013-07-06",
+      "occupation" : "Abang kawasan",
+      "homeAddress1" : "no59,kampung sungai rambut",
+      "homeAddress2" : "86400 parit raja",
+      "homeAddress3" : "batu pahat,johor",
+      "district" : "Batu Pahat",
+      "state" : "Johor",
+      "country" : "Malaysia",
+      "email" : "panda@email.com",
+      "postcode" : "86400",
+      "mobileNo" : "",
+      "picture" : "",
+      "idImg" : "",
+      "nationality" : "001"
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+insert jlk tenant
+TXN : MEDPRO07
+DATA IN -- 
+{ 
+   "txn_cd":"MEDPRO07",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantName":"Kucing Hospitals",
+      "tenantType":"0001",
+      "userID" : "panda",
+      "directorName" : "Panda Lela",
+      "address1" : "No99,jalan kucing bersatu",
+      "address2" : "86570 Bandar Meow,",
+      "address3" : "MEOWS",
+      "townCd":"Pekan kucing muafakat",
+      "districtCd" : "Bandar Meow",
+      "stateCd" : "Meows",
+      "countryCd" : "MEEOWWWSS",
+      "postcode":"86570",
+      "phone" : "999",
+      "email":"meeoww@email.com",
+      "packageType":"Super Deluxe",
+      "startDate":"",
+      "endDate":"",
+      "status":"1",
+      "organisationName":" Kucing kampung plt",
+      "longitude":"1111.1111",
+      "latitude":"22.12123"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+update jlk tenant
+TXN :MEDPRO08
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO08",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantName":"Kucing Hospitals update lagi",
+      "tenantType":"0001",
+      "userID" : "panda",
+      "directorName" : "Panda Lela",
+      "address1" : "No99,jalan kucing bersatu",
+      "address2" : "86570 Bandar Meow,",
+      "address3" : "MEOWS",
+      "townCd":"Pekan kucing muafakat",
+      "districtCd" : "Bandar Meow",
+      "stateCd" : "Meows",
+      "countryCd" : "MEEOWWWSS",
+      "postcode":"86570",
+      "phone" : "999",
+      "email":"meeoww@email.com",
+      "packageType":"Super Deluxe",
+      "startDate":"",
+      "endDate":"",
+      "status":"1",
+      "organisationName":" Kucing kampung plt",
+      "longitude":"1111.1111",
+      "latitude":"22.12123"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+insert jlk_jomedic_master
+TXN : MEDPRO09
+DATA IN --
+
+{ 
+   "txn_cd":"MEDPRO09",
+   "tstamp":"2020-04-27 15:46:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantType":"0001",
+      "hfc":"04010101",
+      "serviceFee":"1999.0",
+      "deposit":"15.0",
+      "discount":"00",
+      "tax":"0.9",
+      "BLC":"12",
+      "APC":"11",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+Update jlk_jomedic_master
+TXN : MEDPRO10
+DATA IN -- 
+{ 
+   "txn_cd":"MEDPRO10",
+   "tstamp":"2020-04-27 15:46:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantType":"0001",
+      "hfc":"04010101",
+      "serviceFee":"9999.0",
+      "deposit":"999.0",
+      "discount":"10",
+      "tax":"10",
+      "BLC":"hello worldd",
+      "APC":"hello world",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+Insert customer account
+TXN: MEDPRO11
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO11",
+   "tstamp":"2020-04-28 15:04:00",
+   "data":{ 
+      "customerId":"pandaLela",
+      "userId":"panda",
+      "bankAccNo":"02824794",
+      "bankName":"Meow Banking Malayan",
+      "address1":"Jalan meow",
+      "address2":",Taman perbankan",
+      "address3":",Bandar Meow",
+      "district":"Bandar Meow",
+      "state":"Negara Kucheng",
+      "glAccCd":"28383293",
+      "accType":"001",
+      "status":"1",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+update customer account
+TXN: MEDPRO12
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO12",
+   "tstamp":"2020-04-28 15:04:00",
+   "data":{ 
+      "customerId":"pandaLela",
+      "userId":"panda",
+      "bankAccNo":"02824794",
+      "bankName":"Meow Banking Malayan",
+      "address1":"Jalan meow",
+      "address2":",Taman perbankan",
+      "address3":",Bandar Meow",
+      "district":"Bandar Meow",
+      "state":"Negara Kucheng",
+      "glAccCd":"28383293",
+      "accType":"001",
+      "status":"1",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+
+/////////////////////////////////////////////////////////////////////
+
+insert qualification
+TXN: MEDPRO13
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO13",
+   "tstamp":"2020-04-28 15:52:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "qualificationCd":"Master Cat",
+      "fieldStudy":"Ilmu Kecomelan Kucing",
+      "universityName":"Universiti of Cat",
+      "graduationYear":"2019-04-20",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+
+/////////////////////////////////////////////////////////////////////
+update qualificaition
+TXN: MEDPRO14
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO14",
+   "tstamp":"2020-04-28 15:52:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "qualificationCd":"Master Cat",
+      "fieldStudy":"Ilmu Kecomelan Kucing",
+      "universityName":"Universiti of Cat Extra",
+      "graduationYear":"2019-04-01",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+insert language
+TXN: MEDPRO15
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO15",
+   "tstamp":"2020-04-29 06:33:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "languageCd":"Bahasa Kucing",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+delete language
+TXN: MEDPRO16
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO16",
+   "tstamp":"2020-04-29 06:33:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "languageCd":"Bahasa Kucing",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+Insert specialty
+TXN: MEDPRO17
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO17",
+   "tstamp":"2020-04-29 06:37:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "specialtyCd":"Jilat jari",
+      "status" : "1",
+      "createdBy":"DR076"
+   }
+}
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+update specialty
+TXN: MEDPRO18
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO18",
+   "tstamp":"2020-04-29 06:37:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "specialtyCd":"Jilat jari",
+      "status" : "0",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+insert working day
+TXN: MEDPRO19
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO19",
+   "tstamp":"2020-04-29 06:47:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "workingDay":"Wednesday",
+      "startTime" : "2020-04-29 06:48:00",
+      "endTime" : "2020-04-30 09:00:00",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+update working day
+TXN: MEDPRO20
+
+DATA IN --
+ { 
+   "txn_cd":"MEDPRO20",
+   "tstamp":"2020-04-29 06:47:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "workingDay":"Wednesday",
+      "startTime" : "2020-04-29 06:48:00",
+      "endTime" : "2020-05-01 09:00:00",
+      "createdBy":"DR076"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+ip address/UNQ
+
+update working day
+TXN: UNQ
+
+** contoh UNQ  => 'ACC','ACT','INV','BILL', etc..
+
+DATA IN --
+  { 
+   "txn_cd":"UNQGEN",
+   "tstamp":"2020-05-08 15:25:00",
+   "data":{ 
+      "UNQ":"INV"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    INV000000000000307
+}
+/////////////////////////////////////////////////////////////////////
+
+
+insert working day bulk
+TXN: MEDPRO21
+
+ { 
+   "txn_cd":"MEDPRO21",
+   "tstamp":"2020-06-10 16:02:00",
+   "data":{
+   		"workingDays" : [
+   			{
+   				"tenantId":"pandaLela",
+			      "workingDay":"Wednesday",
+			      "startTime" : "2020-06-10 08:00:00",
+			      "endTime" : "2020-06-10 19:00:00",
+			      "createdBy":"DR076"
+   			},{
+   				"tenantId":"pandaLela",
+			      "workingDay":"Thursday",
+			      "startTime" : "2020-06-11 08:00:00",
+			      "endTime" : "2020-06-11 19:00:00",
+			      "createdBy":"DR076"
+   			}
+   			]
+      
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": "SUCCESS"
+}
+/////////////////////////////////////////////////////////////////////
+
+get jlk tenant
+TXN :MEDPRO22
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO08",
+   "tstamp":"2020-04-24 12:04:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantType":"0001"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "tenant_id": "MEOW2",
+            "user_id": "panda",
+            "tenant_name": "Kucing Hospitals update lagi",
+            "tenant_type": "0001",
+            "director_name": "Panda Lela",
+            "tenant_address1": "No99,jalan kucing bersatu",
+            "tenant_address2": "86570 Bandar Meow,",
+            "tenant_address3": "MEOWS",
+            "tenant_town_cd": "Pekan kucing muafakat",
+            "tenant_district_cd": "Bandar Meow",
+            "tenant_state_cd": "Meows",
+            "tenant_country_cd": "MEEOWWWSS",
+            "tenant_postcode": "86570",
+            "tenant_phone_no": "999",
+            "tenant_email": "meeoww@email.com",
+            "package_type": "Super Deluxe",
+            "start_date": "0000-00-00 00:00:00",
+            "end_date": "0000-00-00 00:00:00",
+            "status": "1",
+            "organisation_name": " Kucing kampung plt",
+            "longtitude": "1111.1111",
+            "latitude": "22.12123",
+            "created_by": "panda",
+            "created_date": "2020-04-24 12:04:00"
+        }
+    ]
+}
+/////////////////////////////////////////////////////////////////////

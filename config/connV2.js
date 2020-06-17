@@ -2,8 +2,8 @@ var mysql = require('mysql');
 require('dotenv').config();
 var pool = mysql.createPool({
   connectionLimit: 100,
-  host: '157.245.148.221',
-  user: process.env.DB_USER,
+  host: 'localhost',
+  user: 'root',
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
   multipleStatements: true,
