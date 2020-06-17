@@ -8,7 +8,7 @@ var customerModel = function () {
 };
 
 
-customerModel.signUp = function (userId, name, email, password, customerId, icPassportNo, phoneNo, dateOfBirth, question,
+customerModel.signUp = function (ewalletId, name, email, password, customerId, icPassportNo, phoneNo, dateOfBirth, question,
     answer, picture, result) {
 
     var sql = "BEGIN; " +
@@ -19,13 +19,13 @@ customerModel.signUp = function (userId, name, email, password, customerId, icPa
         "SELECT ?, ? WHERE NOT @exist; " +
         "INSERT INTO jlk_user_profile (user_id, name, id_number, DOB, mobile_no, picture, email) " +
         "SELECT ?, ?, ?, ?, ?, ?, ? WHERE NOT @exist;  " +
-        "INSERT INTO ewl_account (user_id, available_amt, freeze_amt, float_amt,currency_cd, status) " +
-        "SELECT ?, 0, 0, 0, '001', '001' WHERE NOT @exist; " +
+        "INSERT INTO ewl_account (user_id, ewallet_acc_no, available_amt, freeze_amt, float_amt,currency_cd, status) " +
+        "SELECT ?, ?, 0, 0, 0, '001', '001' WHERE NOT @exist; " +
         "COMMIT;";
     pool.getConnection(function (err, con) {
         if (err) throw err;
         con.query(sql, [email, email, email, md5(password), question, answer, customerId, email, email, name,
-            icPassportNo, dateOfBirth, phoneNo, picture, email, email], function (err, res) {
+            icPassportNo, dateOfBirth, phoneNo, picture, email, email, ewalletId], function (err, res) {
                 if (err) {
                     con.destroy();
                     result(err, null);

@@ -83,9 +83,9 @@ const custfunction = function (req, res) {
                     data.DateOfBirth = dob.getFullYear().toString() + "-" + (dob.getMonth() + 1).toString()
                         + "-" + dob.getDate().toString();
 
-                    Promise.all([generateId('UID'), generateId('CUS')])
-                        .then(([userId, customerId]) => {
-                            customerModel.signUp(userId, data.Name, data.Email, data.Password, customerId, data.IcPassportNo,
+                    Promise.all([generateId('EWL'), generateId('CUS')])
+                        .then(([ewalletId, customerId]) => {
+                            customerModel.signUp(ewalletId, data.Name, data.Email, data.Password, customerId, data.IcPassportNo,
                                 data.PhoneNo, data.DateOfBirth, data.Question, data.Answer, req.file.buffer, function (err, modelRes) {
                                     if (err) {
                                         console.log(err);
