@@ -173,7 +173,6 @@ Medpro.updateTenant = function (tenant, result) {
 Medpro.getTenant = function (tenant, result) {
   var sql = "SELECT tenant_id,user_id,tenant_name,tenant_type,director_name,tenant_address1,tenant_address2,tenant_address3,tenant_town_cd,tenant_district_cd,tenant_state_cd,tenant_country_cd,tenant_postcode,tenant_phone_no,tenant_email,package_type,start_date,end_date,status,organisation_name,longtitude,latitude,created_by,created_date "+
   "FROM jlk_tenant WHERE tenant_id = '"+tenant.tenant_id+"' AND tenant_type = '"+tenant.tenant_type+"'";
-  console.log(sql);
   pool.getConnection(function (err, con) {
     if (err) throw err; // not connected!
     con.query(sql, function (err, res) {
