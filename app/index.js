@@ -3,8 +3,6 @@ module.exports = (app) => {
     var upload = multer();
 
     var adminC = require('../app/controller/JomMedic/Admin/adminController');
-    //app.post -- "post" can be change to "get" 
-    //                              adminfunction is function name created and exported in controller
     app.post('/adminquery', adminC.adminfunction);
 
     var customerC = require('../app/controller/JomMedic/Customer/customerController');
@@ -20,5 +18,8 @@ module.exports = (app) => {
     app.post('/UNQ',unqCtrl.uniqueNumberGen);
     app.post('/SIGNIN',loginCtrl.loginPost);
     app.post('/EWALL',ewallCtrl.ewalletCheckPost);
+
+    var frontLayerDefend = require('../app/controller/providerController');
+    app.post('/provider',frontLayerDefend.securityCheckPost);
    
 };
