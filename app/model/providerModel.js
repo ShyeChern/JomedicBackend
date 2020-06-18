@@ -1,7 +1,7 @@
 'use strict';
 
 // Import 
-var pool = require('../../config/conn'); // Connection to MySQL
+var pool = require('../../config/connV2');
 var imageConverter = require('./util/imageConverter')  // Image Converter utility
 var md5 = require('md5')
 
