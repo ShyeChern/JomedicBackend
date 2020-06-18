@@ -61,7 +61,7 @@ const custfunction = function (req, res) {
             case 'SIGNUP':
                 data = JSON.parse(data);
                 if (!data.Name || !data.Email || !data.Password || !data.ConfirmPassword || !data.IcPassportNo || !data.PhoneNo ||
-                    !data.DateOfBirth || !data.Question || !data.Answer || !req.file) {
+                    !data.Question || !data.Answer || !req.file) {
                     let responseData = {
                         result: false,
                         value: "Please fill in all the field",
@@ -86,7 +86,7 @@ const custfunction = function (req, res) {
                     Promise.all([generateId('EWL'), generateId('CUS')])
                         .then(([ewalletId, customerId]) => {
                             customerModel.signUp(ewalletId, data.Name, data.Email, data.Password, customerId, data.IcPassportNo,
-                                data.PhoneNo, data.DateOfBirth, data.Question, data.Answer, req.file.buffer, function (err, modelRes) {
+                                data.PhoneNo, data.Question, data.Answer, req.file.buffer, function (err, modelRes) {
                                     if (err) {
                                         console.log(err);
 
