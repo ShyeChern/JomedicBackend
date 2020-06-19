@@ -223,6 +223,38 @@ Medpro.updateMaster = function (data, result) {
   });
 }
 
+//get jlk master
+Medpro.getMaster = function (data, result) {
+  var sql = "SELECT tenant_id,tenant_type,hfc_type_cd,service_fee,deposit,discount,tax,BLC,APC FROM jlk_jomedic_master WHERE tenant_id = '"+data.tenant_id+"' AND tenant_type = '"+data.tenant_type+"'";
+
+  pool.getConnection(function (err, con) {
+    if (err) throw err; // not connected!
+    con.query(sql, function (err, res) {
+      if (err) {
+        con.destroy();
+        result(err, null);
+      } else {
+        con.destroy();
+        if (res[0] || !res[0] == undefined) {
+          //convert buffer to string 
+          if (res[0].BLC || !res[0].BLC === undefined) {
+            var textChunk = res[0].BLC.toString('utf8');
+            res[0].BLC = textChunk;
+          }
+
+          if (res[0].APC || !res[0].APC === undefined) {
+            var textChunk2 = res[0].APC.toString('utf8');
+            res[0].APC = textChunk2;
+          }
+          result(null, res);
+        } else if (!res[0] || res[0] == undefined) {
+          result(null, res);
+        }
+      }
+    });
+  });
+}
+
 //insert jlk customer acc
 Medpro.insertCustAcc = function (data, result) {
   var sql = "INSERT INTO jlk_customer_acc (customer_id,user_id,bank_acc_no,bank_name,bank_address1,bank_address2,bank_address3,district_cd,state_cd,gl_acc_cd,acc_type,status,created_by,created_date) " +
@@ -296,6 +328,23 @@ Medpro.updateQualification = function (data, result) {
     });
 }
 
+//get jlk qualification
+Medpro.getQualification = function (data, result) {
+  var sql = "SELECT tenant_id,qualification_cd,field_study,university_name,graduation_year FROM jlk_qualification WHERE tenant_id = '"+data.tenant_id+"' AND qualification_cd = '"+data.qualification_cd+"' AND field_study = '"+data.field_study+"'"; +
+    pool.getConnection(function (err, con) {
+      if (err) throw err; // not connected!
+      con.query(sql, function (err, res) {
+        if (err) {
+          con.destroy();
+          result(err, null);
+        } else {
+          con.destroy();
+          result(null, res);
+        }
+      });
+    });
+}
+
 
 //insert jlk language
 Medpro.insertLanguage = function (data, result) {
@@ -336,6 +385,23 @@ Medpro.deleteLanguage = function (data, result) {
 //insert jlk specialty
 Medpro.insertSpecialty = function (data, result) {
   var sql = "INSERT INTO jlk_jomedic_specialty (tenant_id,specialty_cd,status,created_by,created_date) VALUES ('" + data.tenant_id + "','" + data.specialty_cd + "','" + data.status + "','" + data.created_by + "','" + data.created_date + "')";
+  pool.getConnection(function (err, con) {
+    if (err) throw err; // not connected!
+    con.query(sql, function (err, res) {
+      if (err) {
+        con.destroy();
+        result(err, null);
+      } else {
+        con.destroy();
+        result(null, res);
+      }
+    });
+  });
+}
+
+//get jlk specialty
+Medpro.getSpecialty = function (data, result) {
+  var sql = "SELECT tenant_id,specialty_cd,status FROM jlk_jomedic_specialty WHERE tenant_id = '"+data.tenant_id+"' AND specialty_cd = '"+data.specialty_cd+"' ";
   pool.getConnection(function (err, con) {
     if (err) throw err; // not connected!
     con.query(sql, function (err, res) {
@@ -408,6 +474,23 @@ Medpro.insertWorkingDayBulk = function (data, result) {
 //update jlk working day
 Medpro.updateWorkingDay = function (data, result) {
   var sql = "UPDATE jlk_working_day SET start_time = '" + data.start_time + "',end_time = '" + data.end_time + "' WHERE tenant_id = '" + data.tenant_id + "' AND working_day = '" + data.working_day + "'";
+  pool.getConnection(function (err, con) {
+    if (err) throw err; // not connected!
+    con.query(sql, function (err, res) {
+      if (err) {
+        con.destroy();
+        result(err, null);
+      } else {
+        con.destroy();
+        result(null, res);
+      }
+    });
+  });
+}
+
+//get jlk working day
+Medpro.getWorkingDay = function (data, result) {
+  var sql = "SELECT tenant_id,working_day,start_time,end_time FROM jlk_working_day WHERE tenant_id = '"+data.tenant_id+"' AND working_day = '"+data.working_day+"' AND start_time = '"+data.start_time+"'";
   pool.getConnection(function (err, con) {
     if (err) throw err; // not connected!
     con.query(sql, function (err, res) {

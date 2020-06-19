@@ -926,6 +926,120 @@ const providerCheckPost = function (req, res) {
                     });
                 }
                 break;
+
+                case 'MEDPRO23':
+                if (!datas.tenantId || datas.tenantId == "" || datas.specialtyCd == "" || !datas.specialtyCd) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    var tenant = [];
+                    tenant.tenant_id = datas.tenantId;
+                    tenant.specialty_cd = datas.specialtyCd;
+                    
+
+                    Provid.getSpecialty(tenant, function (error, returnData) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.status(400).send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(returnData, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+                case 'MEDPRO24':
+                if (!datas.tenantId || datas.tenantId == "" || datas.qualificationCd == "" || !datas.qualificationCd || datas.fieldStudy == "" || !datas.fieldStudy) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    var tenant = [];
+                    tenant.tenant_id = datas.tenantId;
+                    tenant.qualification_cd = datas.qualificationCd;
+                    tenant.field_study = datas.fieldStudy;
+                    
+
+                    Provid.getQualification(tenant, function (error, returnData) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.status(400).send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(returnData, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+                case 'MEDPRO25':
+                if (!datas.tenantId || datas.tenantId == "" || datas.workingDay == "" || !datas.workingDay || datas.startTime == "" || !datas.startTime) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    var tenant = [];
+                    tenant.tenant_id = datas.tenantId;
+                    tenant.working_day = datas.workingDay;
+                    tenant.start_time = datas.startTime;
+                    
+
+                    Provid.getWorkingDay(tenant, function (error, returnData) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.status(400).send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(returnData, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+                case 'MEDPRO26':
+                if (!datas.tenantId || datas.tenantId == "" || datas.tenantType == "" || !datas.tenantType ) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    var tenant = [];
+                    tenant.tenant_id = datas.tenantId;
+                    tenant.tenant_type = datas.tenantType;
+                    
+
+                    Provid.getMaster(tenant, function (error, returnData) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.status(400).send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(returnData, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
         }
 
 

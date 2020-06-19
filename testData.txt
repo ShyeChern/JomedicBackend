@@ -688,3 +688,118 @@ DATA OUT --
     ]
 }
 /////////////////////////////////////////////////////////////////////
+
+get jlk specialty
+TXN :MEDPRO23
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO23",
+   "tstamp":"2020-06-18 02:33:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "specialtyCd" : "Jilat jari"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "tenant_id": "pandaLela",
+            "specialty_cd": "Jilat jari",
+            "status": "0"
+        }
+    ]
+}
+/////////////////////////////////////////////////////////////////////
+get jlk qualification
+TXN :MEDPRO24
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO24",
+   "tstamp":"2020-06-18 02:33:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "qualificationCd" : "Master Cat",
+      "fieldStudy" : "Ilmu Kecomelan Kucing"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "tenant_id": "pandaLela",
+            "qualification_cd": "Master Cat",
+            "field_study": "Ilmu Kecomelan Kucing",
+            "university_name": "Universiti of Cat Extra",
+            "graduation_year": "2019-04-01"
+        }
+    ]
+}
+/////////////////////////////////////////////////////////////////////
+get jlk workin day
+TXN :MEDPRO25
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO25",
+   "tstamp":"2020-06-18 02:33:00",
+   "data":{ 
+      "tenantId":"pandaLela",
+      "workingDay" : "Thursday",
+      "startTime" : "2020-06-11 08:00:00"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "tenant_id": "pandaLela",
+            "working_day": "Thursday",
+            "start_time": "2020-06-11 08:00:00",
+            "end_time": "2020-06-11 19:00:00"
+        }
+    ]
+}
+/////////////////////////////////////////////////////////////////////
+get jlk specialty
+TXN :MEDPRO26
+DATA IN -- 
+
+{ 
+   "txn_cd":"MEDPRO26",
+   "tstamp":"2020-06-18 02:33:00",
+   "data":{ 
+      "tenantId":"MEOW2",
+      "tenantType" : "0001"
+   }
+}
+
+-----------------------------------------------------
+DATA OUT --
+{
+    "status": [
+        {
+            "tenant_id": "MEOW2",
+            "tenant_type": "0001",
+            "hfc_type_cd": "04010101",
+            "service_fee": 9999,
+            "deposit": 999,
+            "discount": 10,
+            "tax": 10,
+            "BLC": "hello worldd",
+            "APC": "hello world"
+        }
+    ]
+}
+
+
+p/s = BLC & APC in base64 string
+/////////////////////////////////////////////////////////////////////
