@@ -286,14 +286,16 @@ customerModel.doctorDetail = function (DoctorId, CustomerId, result) {
     var sql = "BEGIN; " +
         "SELECT t.tenant_id, t.tenant_name, t.status, q.qualification_cd, GROUP_CONCAT(s.specialty_cd) AS specialty_cd, q.university_name, " +
         "EXTRACT(YEAR FROM q.graduation_year) AS graduation_year, (SELECT price FROM jlk_package WHERE service_type='J12101') AS chat, " +
-        "(SELECT price FROM jlk_package WHERE service_type='J12100') AS video " +
+        "(SELECT price FROM jlk_package WHERE service_type='J12100') AS video, h.hfc_name, h.longitude, h.latitude, " +
+        "CONCAT(h.address1, ', ', h.address2, ', ', h.address3) AS address " +
         "FROM jlk_tenant t INNER JOIN jlk_qualification q ON t.tenant_id = q.tenant_id " +
         "INNER JOIN jlk_jomedic_specialty s ON t.tenant_id = s.tenant_id " +
+        "INNER JOIN jlk_health_facility h ON h.tenant_id = t.tenant_id " +
         "WHERE t.tenant_id = ? ;" +
         "SELECT DATE_FORMAT(start_date, '%d / %m / %Y') AS start_date, DATE_FORMAT(start_date, '%a') AS week, " +
         "DATE_FORMAT(start_time, '%H:%i') AS start_time, DATE_FORMAT(end_time, '%H:%i') AS end_time, status, " +
         "quota FROM pms_duty_roster WHERE hfc_cd=? AND start_date>=CURDATE() + INTERVAL 1 DAY ORDER BY start_date LIMIT 7;" +
-        // "SELECT available_amt FROM ewl_account WHERE user_id=(SELECT user_id FROM jlk_customer_acc WHERE customerId=?);"+
+        // "SELECT available_amt FROM ewl_account WHERE user_id=(SELECT user_id FROM jlk_customer_acc WHERE customer_id=?);"+
         "COMMIT;";
 
     pool.getConnection(function (err, con) {
@@ -306,6 +308,38 @@ customerModel.doctorDetail = function (DoctorId, CustomerId, result) {
             else {
                 con.release();
                 result(null, { result: true, data: res });
+            }
+        });
+    });
+
+};
+
+customerModel.getWallet = function (CustomerId, result) {
+    var sql = "SELECT user_id FROM jlk_customer_acc WHERE customer_id=?";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [CustomerId], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            }
+            else {
+                con.release();
+                sql = "SELECT available_amt FROM ewl_account WHERE user_id=?";
+                pool.getConnection(function (err, con) {
+                    if (err) throw err;
+                    con.query(sql, [res[0].user_id], function (err, res) {
+                        if (err) {
+                            con.destroy();
+                            result(err, null);
+                        }
+                        else {
+                            con.release();
+                            result(null, { result: true, data: res });
+                        }
+                    });
+                });
             }
         });
     });
@@ -367,12 +401,14 @@ customerModel.checkChat = function (CustomerId, result) {
             else {
                 con.release();
                 if (res[1].affectedRows >= 1 && res[2].affectedRows >= 1) {
+                    customerModel.makePayment(CustomerId, 1);
                     result(null, { result: true, accept: true, reject: true });
                 }
                 else if (res[1].affectedRows == 0 && res[2].affectedRows >= 1) {
                     result(null, { result: true, accept: false, reject: true });
                 }
                 else if (res[1].affectedRows >= 1 && res[2].affectedRows == 0) {
+                    customerModel.makePayment(CustomerId, 1);
                     result(null, { result: true, accept: true, reject: false });
                 }
                 else {
@@ -460,7 +496,6 @@ customerModel.endLiveChat = function (OrderNo, CustomerId, DoctorId, result) {
             }
             else {
                 con.release();
-
                 if (res[1].affectedRows == 1 && res[2].affectedRows == 1 && res[3].affectedRows == 1) {
                     result(null, { result: true, data: res[4] });
                 }
@@ -488,7 +523,7 @@ customerModel.chatEnded = function (OrderNo, result) {
             }
             else {
                 con.release();
-
+                customerModel.makePayment(CustomerId, 1);
                 result(null, { result: true, data: res });
 
             }
@@ -607,6 +642,7 @@ customerModel.videoCallEnd = function (CustomerId, ChatDuration, OrderNo, result
             }
             else {
                 con.release();
+                customerModel.makePayment(CustomerId, 5);
                 if (res[2].affectedRows >= 1 && res[3].affectedRows == 1 && res[4].affectedRows == 1) {
                     result(null, { result: true, data: res[5] });
                 }
@@ -617,6 +653,38 @@ customerModel.videoCallEnd = function (CustomerId, ChatDuration, OrderNo, result
 
         });
     });
+};
+
+customerModel.makePayment = function (CustomerId, Amount) {
+    var sql = "SELECT user_id FROM jlk_customer_acc WHERE customer_id=?";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [CustomerId], function (err, res) {
+            if (err) {
+                con.destroy();
+                // result(err, null);
+            }
+            else {
+                con.release();
+                sql = "UPDATE ewl_account SET available_amt=available_amt-? WHERE user_id=?";
+                pool.getConnection(function (err, con) {
+                    if (err) throw err;
+                    con.query(sql, [Amount, res[0].user_id], function (err, res) {
+                        if (err) {
+                            con.destroy();
+                            // result(err, null);
+                        }
+                        else {
+                            con.release();
+                            // result(null, { result: true, data: res });
+                        }
+                    });
+                });
+            }
+        });
+    });
+
 };
 
 customerModel.makeAppointment = function (CustomerId, DoctorId, Date, Time, OrderNo, result) {

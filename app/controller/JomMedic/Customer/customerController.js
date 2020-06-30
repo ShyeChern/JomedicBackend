@@ -2,6 +2,7 @@
 
 var customerModel = require('../../../model/customerModel');
 var MM = require('../../../model/Util/MessageManager');
+var EmailHelper = require('../../../model/Util/EmailHelper');
 var md5 = require('md5');
 var format = require('date-fns/format');
 var set = require('date-fns/set');
@@ -73,6 +74,22 @@ const custfunction = function (req, res) {
                     let responseData = {
                         result: false,
                         value: "Password is not matched",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else if (data.IcPassportNo.length != 12) {
+                    let responseData = {
+                        result: false,
+                        value: "Invalid IC",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else if (data.PhoneNo.length != 10) {
+                    let responseData = {
+                        result: false,
+                        value: "Invalid Phone No",
                     }
                     res.send(responseData);
                     res.end();
@@ -202,24 +219,18 @@ const custfunction = function (req, res) {
                         }
                         else {
                             if (modelRes.result === true) {
-                                var transporter = nodemailer.createTransport({
-                                    service: 'gmail',
-                                    auth: {
-                                        user: 'fashiononfire123@gmail.com',
-                                        pass: 'fashion123!'
-                                    }
-                                });
-
-                                var mailOptions = {
-                                    // user email
-                                    from: 'fashiononfire123@gmail.com',
-                                    // to: data.Email,
-                                    to: 'chern-97@hotmail.com',
-                                    subject: 'Jomedic Reset Account Password',
-                                    text: 'Your account password has been reset to ' + randomPass
+                                var email = {
+                                    receiver: data.Email,
+                                    // receiver: 'chern-97@hotmail.com',
+                                    subject: 'JomMedic - Reset Account Password',
+                                    text: 'Your account password has been reset to ' + randomPass,
+                                    sender: process.env.EMAIL_USER,
+                                    user: process.env.EMAIL_USER,
+                                    pass: process.env.EMAIL_PASS
                                 };
 
-                                transporter.sendMail(mailOptions, function (err, info) {
+
+                                EmailHelper.sendGG(email, function (err, result) {
                                     if (err) {
                                         console.log(err);
                                         let responseData = {
@@ -239,6 +250,44 @@ const custfunction = function (req, res) {
                                         res.end();
                                     }
                                 });
+
+                                // var transporter = nodemailer.createTransport({
+                                //     service: 'gmail',
+                                //     auth: {
+                                //         user: 'fashiononfire123@gmail.com',
+                                //         pass: 'fashion123!'
+                                //     }
+                                // });
+
+                                // var mailOptions = {
+                                //     // user email
+                                //     from: 'fashiononfire123@gmail.com',
+                                //     // to: data.Email,
+                                //     to: 'chern-97@hotmail.com',
+                                //     subject: 'Jomedic Reset Account Password',
+                                //     text: 'Your account password has been reset to ' + randomPass
+                                // };
+
+                                // transporter.sendMail(mailOptions, function (err, info) {
+                                //     if (err) {
+                                //         console.log(err);
+                                //         let responseData = {
+                                //             result: false,
+                                //             value: "Fail to send email",
+                                //         }
+
+                                //         res.send(responseData);
+                                //         res.end();
+                                //     }
+                                //     else {
+                                //         let responseData = {
+                                //             result: true,
+                                //             value: 'Reset Password Successful. Please check your email'
+                                //         }
+                                //         res.send(responseData);
+                                //         res.end();
+                                //     }
+                                // });
                             }
                             else {
                                 res.send(modelRes);
@@ -443,14 +492,43 @@ const custfunction = function (req, res) {
                             modelRes.data = modelRes.data[1];
                             modelRes.data[0].appointmentTimeList = Time;
 
-                            // modelRes.data[0].walletBalance = modelRes.data[3].available_amt;
-
                             res.send(modelRes);
                             res.end();
                         }
                     });
                 }
                 break;
+
+            case 'GETWALLET':
+                if (!data.CustomerId) {
+                    let responseData = {
+                        result: false,
+                        value: "Empty Data Detected",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    customerModel.getWallet(data.CustomerId, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            res.send(modelRes);
+                            res.end();
+                        }
+                    });
+                }
+                break;
+
 
             case 'CREATECHAT':
                 if (!data.CustomerId || !data.DoctorId) {
@@ -765,6 +843,7 @@ const custfunction = function (req, res) {
                 }
                 else {
                     customerModel.videoCallEnd(data.CustomerId, data.ChatDuration, data.OrderNo, function (err, modelRes) {
+
                         if (err) {
                             console.log(err);
 
@@ -1155,25 +1234,55 @@ const custfunction = function (req, res) {
                             res.end();
                         }
                         else {
-                            var transporter = nodemailer.createTransport({
-                                service: 'gmail',
-                                auth: {
-                                    user: 'fashiononfire123@gmail.com',
-                                    pass: 'fashion123!'
-                                }
-                            });
-
-                            var mailOptions = {
-                                // user email
-                                // modelRes.data[0].email
-                                from: modelRes.data[0].email,
-                                // to: modelRes.data[0].email,
-                                to: 'chern-97@hotmail.com',
-                                subject: data.Subject,
-                                text: data.Content
+                            var email = {
+                                receiver: modelRes.data[0].email,
+                                // receiver: 'chern-97@hotmail.com',
+                                subject: 'JomMedic - Contact Us',
+                                text: 'We have received your email. Our staff will contact you soon.',
+                                sender: process.env.EMAIL_USER,
+                                user: process.env.EMAIL_USER,
+                                pass: process.env.EMAIL_PASS
                             };
 
-                            transporter.sendMail(mailOptions, function (err, info) {
+                            // var transporter = nodemailer.createTransport({
+                            //     service: 'gmail',
+                            //     auth: {
+                            //         user: 'fashiononfire123@gmail.com',
+                            //         pass: 'fashion123!'
+                            //     }
+                            // });
+
+                            // var mailOptions = {
+                            //     // user email
+                            //     // modelRes.data[0].email
+                            //     from: modelRes.data[0].email,
+                            //     // to: modelRes.data[0].email,
+                            //     to: 'chern-97@hotmail.com',
+                            //     subject: data.Subject,
+                            //     text: data.Content
+                            // };
+
+                            // transporter.sendMail(mailOptions, function (err, info) {
+                            //     if (err) {
+                            //         console.log(err);
+                            //         let responseData = {
+                            //             result: false,
+                            //             value: "Fail to send email",
+                            //         }
+
+                            //         res.send(responseData);
+                            //         res.end();
+                            //     }
+                            //     else {
+                            //         let responseData = {
+                            //             result: true,
+                            //         }
+                            //         res.send(responseData);
+                            //         res.end();
+                            //     }
+                            // });
+
+                            EmailHelper.sendGG(email, function (err, result) {
                                 if (err) {
                                     console.log(err);
                                     let responseData = {
