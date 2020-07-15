@@ -1507,9 +1507,461 @@ providerModel.getBP = function (newData, result) {
 };
 
 // Remaining Vital Sign will do in PSM2
-// Blood Glucose, Respiratory Rate, Oxygen Saturation, Cholesterol, Weight & Height & BMI
+// Blood Glucose, Respiratory Rate, Cholesterol, Weight & Height & BMI
 
+// Oxygen Saturation 
+// Check for duplicate oxygen saturation records in lhr_spo2
+providerModel.checkDuplicateOxygenSaturation = function (newData, result) {
+    var sql = "SELECT pmi_no FROM lhr_spo2 WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
 
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "duplicate");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "OK");
+                }
+            }
+        });
+    });
+};
+
+// Insert a oxygen saturation record into database
+providerModel.insertOxygenSaturation = function (newData, tstamp, result) {
+    var sql = "INSERT INTO lhr_spo2 (pmi_no, hfc_cd, episode_date, encounter_date, spo2_reading, " +
+        "created_by, created_date) VALUES (?,?,?,?,?,?,?);";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date,
+            newData.spo2_reading, newData.hfc_cd, tstamp],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Update a oxygen saturation record in database
+providerModel.updateOxygenSaturation = function (newData, result) {
+    var sql = "UPDATE lhr_spo2 SET spo2_reading=? " +
+        "WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.spo2_reading, newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    console.log(err)
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Select a oxygen saturation record from database for a consultation session
+providerModel.getOxygenSaturation = function (newData, result) {
+
+    var sql = "SELECT * FROM lhr_spo2 WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Respiratory Rate
+// Check for duplicate respiratory rate records in lhr_respiratory_rate
+providerModel.checkDuplicateRespiratoryRate = function (newData, result) {
+    var sql = "SELECT pmi_no FROM lhr_respiratory_rate WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "duplicate");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "OK");
+                }
+            }
+        });
+    });
+};
+
+// Insert a respiratory rate record into database
+providerModel.insertRespiratoryRate = function (newData, tstamp, result) {
+    var sql = "INSERT INTO lhr_respiratory_rate (pmi_no, hfc_cd, episode_date, encounter_date, rate, " +
+        "created_by, created_date) VALUES (?,?,?,?,?,?,?);";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date,
+            newData.rate, newData.hfc_cd, tstamp],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Update a respiratory rate record in database
+providerModel.updateRespiratoryRate = function (newData, result) {
+    var sql = "UPDATE lhr_respiratory_rate SET rate=? " +
+        "WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.rate, newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    console.log(err)
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Select a respiratory rate record from database for a consultation session
+providerModel.getRespiratoryRate = function (newData, result) {
+
+    var sql = "SELECT * FROM lhr_respiratory_rate WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Blood Glucose
+// Check for duplicate blood glucose records in lhr_blood_glucose
+providerModel.checkDuplicateBloodGlucose = function (newData, result) {
+    var sql = "SELECT pmi_no FROM lhr_blood_glucose WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "duplicate");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "OK");
+                }
+            }
+        });
+    });
+};
+
+// Insert a blood glucose record into database
+providerModel.insertBloodGlucose = function (newData, tstamp, result) {
+    var sql = "INSERT INTO lhr_blood_glucose (pmi_no, hfc_cd, episode_date, encounter_date, blood_glucose_level, date_taken, " +
+        "created_by, created_date) VALUES (?,?,?,?,?,?,?,?);";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date,
+            newData.blood_glucose_level, tstamp, newData.hfc_cd, tstamp],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Update a blood glucose record in database
+providerModel.updateBloodGlucose = function (newData, tstamp, result) {
+    var sql = "UPDATE lhr_blood_glucose SET blood_glucose_level=?, date_taken=? " +
+        "WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.blood_glucose_level, tstamp, newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    console.log(err)
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Select a blood glucose record from database for a consultation session
+providerModel.getBloodGlucose = function (newData, result) {
+
+    var sql = "SELECT * FROM lhr_blood_glucose WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Cholesterol
+// Check for duplicate Cholesterol records in lhr_cholesterol
+providerModel.checkDuplicateCholesterol = function (newData, result) {
+    var sql = "SELECT pmi_no FROM lhr_cholesterol WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "duplicate");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "OK");
+                }
+            }
+        });
+    });
+};
+
+// Insert a Cholesterol record into database
+providerModel.insertCholesterol = function (newData, tstamp, result) {
+    var sql = "INSERT INTO lhr_cholesterol (pmi_no, hfc_cd, episode_date, encounter_date, date_taken, " +
+        "total_cholesterol, LDL_cholesterol, HDL_cholesterol, triglycerides, non_HDL_C, TG_to_HDL, " +
+        "total_unit, LDL_unit, HDL_unit, Triglycerides_unit, non_HDL_C_unit, TG_to_HDL_ratio_unit, " +
+        "created_by, created_date) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date, tstamp,
+            newData.total_cholesterol, newData.LDL_cholesterol, newData.HDL_cholesterol, newData.triglycerides, newData.non_HDL_C, newData.TG_to_HDL,
+            newData.total_unit, newData.LDL_unit, newData.HDL_unit, newData.Triglycerides_unit, newData.non_HDL_C_unit, newData.TG_to_HDL_ratio_unit,
+            newData.hfc_cd, tstamp],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Update a Cholesterol record in database
+providerModel.updateCholesterol = function (newData, tstamp, result) {
+    var sql = "UPDATE lhr_cholesterol SET date_taken=?,total_cholesterol=?, LDL_cholesterol=?, HDL_cholesterol=?, triglycerides=?, non_HDL_C=?, TG_to_HDL=?, " +
+        "total_unit=?, LDL_unit=?, HDL_unit=?, Triglycerides_unit=?, non_HDL_C_unit=?, TG_to_HDL_ratio_unit=? " +
+        "WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [tstamp, newData.total_cholesterol, newData.LDL_cholesterol, newData.HDL_cholesterol, newData.triglycerides, newData.non_HDL_C, newData.TG_to_HDL,
+                newData.total_unit, newData.LDL_unit, newData.HDL_unit, newData.Triglycerides_unit, newData.non_HDL_C_unit, newData.TG_to_HDL_ratio_unit,
+                newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    console.log(err)
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Select a Cholesterol record from database for a consultation session
+providerModel.getCholesterol = function (newData, result) {
+
+    var sql = "SELECT * FROM lhr_cholesterol WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Weight, Height & BMI
+// Check for duplicate Weight & Height records in lhr_weight_height
+providerModel.checkDuplicateWeightHeight = function (newData, result) {
+    var sql = "SELECT pmi_no FROM lhr_weight_height WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "duplicate");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "OK");
+                }
+            }
+        });
+    });
+};
+
+// Insert a Weight & Height record into database
+providerModel.insertWeightHeight = function (newData, tstamp, result) {
+    var sql = "INSERT INTO lhr_weight_height (pmi_no, hfc_cd, episode_date, encounter_date, weight_reading, height_reading, " +
+        "created_by, created_date) VALUES (?,?,?,?,?,?,?,?);";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date, newData.weight_reading, newData.height_reading,
+            newData.hfc_cd, tstamp],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Update a Weight & Height record in database
+providerModel.updateWeightHeight = function (newData, result) {
+    var sql = "UPDATE lhr_weight_height SET weight_reading=?, height_reading=? " +
+        "WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.weight_reading, newData.height_reading, newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    console.log(err)
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Select a Weight & Height record from database for a consultation session
+providerModel.getWeightHeight = function (newData, result) {
+
+    var sql = "SELECT * FROM lhr_weight_height WHERE pmi_no=? AND hfc_cd=? AND episode_date=? AND encounter_date=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [newData.pmi_no, newData.hfc_cd, newData.episode_date, newData.encounter_date],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    result(err, null);
+                } else {
+                    con.destroy();
+                    result(null, res);
+                }
+            });
+    });
+};
+
+// Medication
 // Search provider with name
 providerModel.searchProvider = function (keyword, result) {
 
@@ -1828,6 +2280,7 @@ providerModel.endAppointment = function (newData, tstamp, result) {
     });
 };
 
+// Cancel an appointment
 providerModel.cancelAppointment = function (newData, tstamp, result) {
 
     var sql = "UPDATE pms_appointment SET canceled_date=?, status='cancel' WHERE order_no=?;";

@@ -1873,6 +1873,386 @@ const securityCheckPost = function (req, res) {
 
                 break;
 
+            // Save an oxygen saturation record into database
+            case "MEDORDER063":
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        console.log(datas)
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Check any existing schedule         
+                    JomProvider.checkDuplicateOxygenSaturation(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                // Insert if no duplicate
+                                JomProvider.insertOxygenSaturation(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else if (dataBack === "duplicate") {
+                                // Update if duplicate exists
+                                JomProvider.updateOxygenSaturation(datas, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Get Oxygen Saturation record for a consultation session 
+            case 'MEDORDER064':
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getOxygenSaturation(datas, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+            // Save an respiratory rate record into database
+            case "MEDORDER065":
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        console.log(datas)
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Check any existing schedule         
+                    JomProvider.checkDuplicateRespiratoryRate(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                // Insert if no duplicate
+                                JomProvider.insertRespiratoryRate(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else if (dataBack === "duplicate") {
+                                // Update if duplicate exists
+                                JomProvider.updateRespiratoryRate(datas, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Get Respiratory Rate record for a consultation session 
+            case 'MEDORDER066':
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getRespiratoryRate(datas, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+            // Save an blood glucose record into database
+            case "MEDORDER067":
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        console.log(datas)
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Check any existing schedule         
+                    JomProvider.checkDuplicateBloodGlucose(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                // Insert if no duplicate
+                                JomProvider.insertBloodGlucose(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else if (dataBack === "duplicate") {
+                                // Update if duplicate exists
+                                JomProvider.updateBloodGlucose(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Get Blood Glucose record for a consultation session 
+            case 'MEDORDER068':
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getBloodGlucose(datas, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+            // Save a Cholesterol record into database
+            case "MEDORDER069":
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        console.log(datas)
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Check any existing schedule         
+                    JomProvider.checkDuplicateCholesterol(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                // Insert if no duplicate
+                                JomProvider.insertCholesterol(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else if (dataBack === "duplicate") {
+                                // Update if duplicate exists
+                                JomProvider.updateCholesterol(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Get Cholesterol record for a consultation session 
+            case 'MEDORDER070':
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getCholesterol(datas, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+            // Save a weight & height record into database
+            case "MEDORDER071":
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        console.log(datas)
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Check any existing records         
+                    JomProvider.checkDuplicateWeightHeight(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                // Insert if no duplicate
+                                JomProvider.insertWeightHeight(datas, tstamp, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            } else if (dataBack === "duplicate") {
+                                // Update if duplicate exists
+                                JomProvider.updateWeightHeight(datas, function (errs, datasx) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Get weight & height record for a consultation session 
+            case 'MEDORDER072':
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getWeightHeight(datas, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+                
             default:
                 MM.showMessage("TXN", function (dataMM) {
                     res.send(dataMM);
