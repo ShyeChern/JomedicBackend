@@ -290,7 +290,7 @@ customerModel.doctorDetail = function (DoctorId, CustomerId, result) {
         "CONCAT(h.address1, ', ', h.address2, ', ', h.address3) AS address " +
         "FROM jlk_tenant t INNER JOIN jlk_qualification q ON t.tenant_id = q.tenant_id " +
         "INNER JOIN jlk_jomedic_specialty s ON t.tenant_id = s.tenant_id " +
-        "INNER JOIN jlk_health_facility h ON h.tenant_id = t.tenant_id " +
+        "LEFT JOIN jlk_health_facility h ON h.tenant_id = t.tenant_id " +
         "WHERE t.tenant_id = ? ;" +
         "SELECT DATE_FORMAT(start_date, '%d / %m / %Y') AS start_date, DATE_FORMAT(start_date, '%a') AS week, " +
         "DATE_FORMAT(start_time, '%H:%i') AS start_time, DATE_FORMAT(end_time, '%H:%i') AS end_time, status, " +
