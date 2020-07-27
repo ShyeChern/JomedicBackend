@@ -370,6 +370,7 @@ customerModel.createChat = function (CustomerId, DoctorId, OrderNo, result) {
             else {
                 con.release();
                 if (res[3].affectedRows == 1) {
+                    customerModel.makePayment(CustomerId, 1);
                     result(null, { result: true, data: "Submit request success. Please wait for doctor to accept your chat request" });
                 }
                 else {
@@ -401,14 +402,15 @@ customerModel.checkChat = function (CustomerId, result) {
             else {
                 con.release();
                 if (res[1].affectedRows >= 1 && res[2].affectedRows >= 1) {
-                    customerModel.makePayment(CustomerId, 1);
+                    // customerModel.makePayment(CustomerId, 1);
                     result(null, { result: true, accept: true, reject: true });
                 }
                 else if (res[1].affectedRows == 0 && res[2].affectedRows >= 1) {
+                    customerModel.makePayment(CustomerId, -1);
                     result(null, { result: true, accept: false, reject: true });
                 }
                 else if (res[1].affectedRows >= 1 && res[2].affectedRows == 0) {
-                    customerModel.makePayment(CustomerId, 1);
+                    // customerModel.makePayment(CustomerId, 1);
                     result(null, { result: true, accept: true, reject: false });
                 }
                 else {
