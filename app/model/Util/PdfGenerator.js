@@ -65,17 +65,17 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
                         ],
                     },
                     {
-                        // text: [
-                        //     { text: 'Collect Medication At: \n', bold: true },
-                        //     // { text: 'Klinik Kesihatan UTeM Kampus Induk', fontSize: 16 }, '\n',
-                        //     // { text: 'Jalan UTeM, Taman UTeM, 76100 Durian Tunggal, Melaka', fontSize: 11 }, '\n',
-                        //     // { text: '2.3104 °N, 102.3174 °E', fontSize: 10 },
+                        text: [
+                            { text: 'Collect Medication At: \n', bold: true },
+                            // { text: 'Klinik Kesihatan UTeM Kampus Induk', fontSize: 16 }, '\n',
+                            // { text: 'Jalan UTeM, Taman UTeM, 76100 Durian Tunggal, Melaka', fontSize: 11 }, '\n',
+                            // { text: '2.3104 °N, 102.3174 °E', fontSize: 10 },
 
-                        //     { text: facility.hfc_name, fontSize: 16 }, '\n',
-                        //     { text: facility.address1 + " " + facility.address2 + " " + facility.address3, fontSize: 11 }, '\n',
-                        //     { text: facility.latitude + ' °N, ' + facility.longitude + ' °E', fontSize: 10 },
+                            // { text: facility.hfc_name, fontSize: 16 }, '\n',
+                            // { text: facility.address1 + " " + facility.address2 + " " + facility.address3, fontSize: 11 }, '\n',
+                            // { text: facility.latitude + ' °N, ' + facility.longitude + ' °E', fontSize: 10 },
 
-                        // ]
+                        ]
                     }
                 ]
             },
@@ -174,25 +174,28 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
         },
     };
 
-    // var pdfDoc = printer.createPdfKitDocument(docDefinition);
-    // pdfDoc.pipe(fs.createWriteStream('prescription.pdf'));
-    // pdfDoc.end();
-
-    // Direct attach file to email without save at local storage
     var pdfDoc = printer.createPdfKitDocument(docDefinition);
     pdfDoc.end();
-    return pdfDoc;
 
+    return pdfDoc;
+    // Direct attach file to email without save at local storage
+    // var pdfDoc = printer.createPdfKitDocument(docDefinition);
+    // pdfDoc.end();
 }
 
 var calculateAge = (DOB) => {
     return moment().diff(DOB, 'year')
 }
 
-PdfGenerator.generatePrescription = function (patient, doctor, hfc, medicationMaster, medications) {
+// PdfGenerator.generatePrescription = function (patient, doctor, hfc, medicationMaster, medications) {
+//     // Initialize Data
+//     return generatePdf(patient[0], doctor[0], hfc[0], medicationMaster[0], medications);
+// }
 
+PdfGenerator.generatePrescription = function (patient, doctor, medicationMaster, medications) {
     // Initialize Data
-    return generatePdf(patient[0], doctor[0], hfc[0], medicationMaster[0], medications);
+    return generatePdf(patient[0], doctor[0], medicationMaster[0], medications);
 }
+
 
 module.exports = PdfGenerator;
