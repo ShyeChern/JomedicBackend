@@ -133,6 +133,36 @@ const custfunction = function (req, res) {
                 }
                 break;
 
+            case 'USERTYPE':
+                if (!data.Email) {
+                    let responseData = {
+                        result: false,
+                        value: "Please fill in all the field",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    customerModel.userType(data.Email, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            res.send(modelRes);
+                            res.end();
+                        }
+                    });
+                }
+                break;
+
             case 'LOGIN':
                 if (!data.Email || !data.Password) {
                     let responseData = {

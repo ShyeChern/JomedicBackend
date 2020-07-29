@@ -47,6 +47,29 @@ customerModel.signUp = function (ewalletId, name, email, password, customerId, i
 
 };
 
+customerModel.userType = function (email, result) {
+    var sql = "SELECT user_type FROM jlk_users WHERE user_id = ?;";
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [email], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            }
+            else {
+                con.release();
+                if (res.length == 1) {
+                    result(null, { result: true, data: res });
+                }
+                else {
+                    result(null, { result: false, value: 'Invalid Email' });
+                }
+
+            }
+        });
+    });
+};
+
 customerModel.login = function (email, password, result) {
     var sql = "BEGIN; " +
         "SELECT c.customer_id, u.user_type " +
