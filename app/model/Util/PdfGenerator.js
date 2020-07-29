@@ -174,14 +174,15 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
         },
     };
 
-    var pdfDoc = printer.createPdfKitDocument(docDefinition);
-    // pdfDoc.pipe(fs.createWriteStream('prescription.pdf'));
-    pdfDoc.end();
-
-    return pdfDoc;
-    // Direct attach file to email without save at local storage
     // var pdfDoc = printer.createPdfKitDocument(docDefinition);
+    // pdfDoc.pipe(fs.createWriteStream('prescription.pdf'));
     // pdfDoc.end();
+
+    // Direct attach file to email without save at local storage
+    var pdfDoc = printer.createPdfKitDocument(docDefinition);
+    pdfDoc.end();
+    return pdfDoc;
+
 }
 
 var calculateAge = (DOB) => {

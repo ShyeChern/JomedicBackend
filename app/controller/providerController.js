@@ -2368,10 +2368,11 @@ const securityCheckPost = function (req, res) {
                                     var email = {
                                         receiver: patientData[0].email,
                                         subject: 'JomMedic - Prescription Slip',
-                                        text: 'Your consulation session ends and thank you for using JomMedic. \nHere is your prescription slip for ' + datas.OrderNo + '. \nYou can collect your medication at any pharmacy.',
+                                        text: 'Your consulation session ends and thank you for using JomMedic. \nHere is your prescription slip for ' + datas.order_no + '. \nYou can collect your medication at any pharmacy.',
                                         attachments: {
-                                            fileName: 'PrescriptionSlip-' + datas.OrderNo + '.pdf',
+                                            fileName: 'PrescriptionSlip-' + datas.order_no + '.pdf',
                                             content: prescriptionSlip,    // The pdf doc from pdfGenerator
+                                            contentType: 'application/pdf',                                            
                                         },
                                         sender: process.env.EMAIL_USER,
                                         user: process.env.EMAIL_USER,
@@ -2379,7 +2380,7 @@ const securityCheckPost = function (req, res) {
                                     };
 
                                     // Send the email
-                                    EmailHelper.sendGG(email, function (err, result) {
+                                    EmailHelper.sendGGWithAttachments(email, function (err, result) {
                                         if (err) {
                                             MM.showMessage(err.code, function (dataMM) {
                                                 res.send(dataMM);
