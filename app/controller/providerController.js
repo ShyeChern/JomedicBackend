@@ -3,6 +3,9 @@
 var JomProvider = require("../model/providerModel")
 var MM = require('../model/util/MessageManager');
 var md5 = require('md5');
+var EmailHelper = require('../model/Util/EmailHelper');
+const PdfGenerator = require("../model/Util/PdfGenerator");
+
 require('dotenv').config();
 
 var msg;
@@ -1951,6 +1954,7 @@ const securityCheckPost = function (req, res) {
 
             // Save an respiratory rate record into database
             case "MEDORDER065":
+                // hfc_cd is the tenant_id, not hfc code
                 if ((!datas.hfc_cd || !datas.pmi_no || !datas.encounter_date || !datas.episode_date) ||
                     (datas.hfc_cd == "" || datas.pmi_no == "" || datas.encounter_date == "" || datas.episode_date == "")) {
                     MM.showMessage("B", function (dataMM) {
@@ -2252,7 +2256,156 @@ const securityCheckPost = function (req, res) {
                     });
                 }
                 break;
-                
+
+            // Send Prescription Slip to Patient Email
+            case 'MEDORDER073':
+                // Validate the prescription slip request
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.order_no || !datas.health_facility_code) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.order_no == "" || datas.health_facility_code == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    // Initialize the required data
+                    var patientData = null;
+                    var doctorData = null;
+                    var medicationMasterData = null;
+                    var medicationsData = null;
+                    var hfcData = null;
+
+                    var promises = [];
+                    var pResults = [];
+                    (async () => {
+                        // Seperate Promise for each query
+                        // Patient Data
+                        var promise = await new Promise(
+                            function (resolve, reject) {
+                                JomProvider.getUserDataWithId(datas.pmi_no, resolve, reject);
+                            }
+                        ).then((res) => {
+                            patientData = res
+                            pResults.push(null)
+                        }).catch((err) => {
+                            pResults.push(err)
+                        }).finally(
+                            promises.push(promise)
+                        )
+
+                        // Doctor Data
+                        var promise = await new Promise(
+                            function (resolve, reject) {
+                                JomProvider.getTenantWithTenantId(datas.hfc_cd, resolve, reject);
+                            }
+                        ).then((res) => {
+                            doctorData = res
+                            pResults.push(null)
+                        }).catch((err) => {
+                            pResults.push(err)
+                        }).finally(
+                            promises.push(promise)
+                        )
+
+                        // Medication Master Data
+                        var promise = await new Promise(
+                            function (resolve, reject) {
+                                JomProvider.getMedicationMasterPromise(datas.order_no, datas.pmi_no, resolve, reject);
+                            }
+                        ).then((res) => {
+                            medicationMasterData = res
+                            pResults.push(null)
+                        }).catch((err) => {
+                            pResults.push(err)
+                        }).finally(
+                            promises.push(promise)
+                        )
+
+                        // Medications Data
+                        var promise = await new Promise(
+                            function (resolve, reject) {
+                                JomProvider.getMedicationsPromise(datas.order_no, resolve, reject);
+                            }
+                        ).then((res) => {
+                            medicationsData = res
+                            pResults.push(null)
+                        }).catch((err) => {
+                            pResults.push(err)
+                        }).finally(
+                            promises.push(promise)
+                        )
+
+                        // Hfc Data
+                        // var promise = await new Promise(
+                        //     function (resolve, reject) {
+                        //         JomProvider.getHealthFacility(datas.health_facility_code, resolve, reject);
+                        //     }
+                        // ).then((res) => {
+                        //     hfcData = res
+                        //     pResults.push(null)
+                        // }).catch((err) => {
+                        //     pResults.push(err)
+                        // }).finally(
+                        //     promises.push(promise)
+                        // )
+
+                        console.log(pResults)
+
+                        Promise.all(promises)
+                            .then(() => {
+                                // Check is all data obtained, show error if not
+                                if (pResults.every(element => element === null)) {
+                                    var prescriptionSlip = null;
+
+                                    // Generate the Prescription Slip Pdf File
+                                    try {
+                                        prescriptionSlip = PdfGenerator.generatePrescription(patientData, doctorData, medicationMasterData, medicationsData);
+                                        // prescriptionSlip = PdfGenerator.generatePrescription(patientData, doctorData, hfcData, medicationMasterData, medicationsData);
+                                    } catch (err) {
+                                        console.log(err);
+                                    }
+
+                                    // Attach the file to email 
+                                    var email = {
+                                        receiver: patientData[0].email,
+                                        subject: 'JomMedic - Prescription Slip',
+                                        text: 'Your consulation session ends and thank you for using JomMedic. \nHere is your prescription slip for ' + datas.OrderNo + '. \nYou can collect your medication at any pharmacy.',
+                                        attachments: {
+                                            fileName: 'PrescriptionSlip-' + datas.OrderNo + '.pdf',
+                                            content: prescriptionSlip,    // The pdf doc from pdfGenerator
+                                        },
+                                        sender: process.env.EMAIL_USER,
+                                        user: process.env.EMAIL_USER,
+                                        pass: process.env.EMAIL_PASS
+                                    };
+
+                                    // Send the email
+                                    EmailHelper.sendGG(email, function (err, result) {
+                                        if (err) {
+                                            MM.showMessage(err.code, function (dataMM) {
+                                                res.send(dataMM);
+                                                res.end();
+                                            });
+                                        } else {
+                                            // auditData = {id:resultId[0].user_id,txn_cd:txn_cd,tstamp:tstamp,activity:"TACEMAIL",created_by : resultId[0].user_id};
+                                            // processAudit(auditData);
+                                            MM.showMessage("1", function (dataMM) {
+                                                res.send(dataMM);
+                                                res.end();
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    let error = pResults.find(element => element !== null)
+                                    MM.showMessage(error.code, function (dataMM) {
+                                        res.send(dataMM);
+                                        res.end();
+                                    });
+                                }
+                            })
+                    })()
+                }
+                break;
+
             default:
                 MM.showMessage("TXN", function (dataMM) {
                     res.send(dataMM);
