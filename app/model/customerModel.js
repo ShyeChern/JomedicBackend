@@ -203,7 +203,7 @@ customerModel.doctor = function (result) {
     //     "INNER JOIN jlk_user_profile u ON t.user_id = u.user_id " +
     //     "ORDER BY q.field_study";
 
-    var sql = "SELECT t.tenant_id, t.tenant_name, t.tenant_state_cd,  t.longtitude, t.latitude, GROUP_CONCAT(s.specialty_cd) AS specialty_cd, u.picture " +
+    var sql = "SELECT t.tenant_id, t.tenant_name, t.tenant_state_cd, t.tenant_district_cd, t.longtitude, t.latitude, GROUP_CONCAT(s.specialty_cd) AS specialty_cd, u.picture " +
         "FROM jlk_tenant t INNER JOIN jlk_jomedic_specialty s ON t.tenant_id = s.tenant_id  " +
         "INNER JOIN jlk_user_profile u ON t.user_id = u.user_id " +
         "GROUP BY t.tenant_id " +
@@ -228,7 +228,7 @@ customerModel.healthcare = function (result) {
 
     // var sql = "SELECT tenant_id, tenant_name, tenant_state_cd, longtitude, latitude, office_photo FROM jlk_tenant;  ";
 
-    var sql = "SELECT DISTINCT hfc_name, hfc_cd, state_cd, longitude, latitude, logo " +
+    var sql = "SELECT DISTINCT hfc_name, hfc_cd, state_cd, district_cd, longitude, latitude, logo " +
         "FROM jlk_health_facility";
 
     pool.getConnection(function (err, con) {
