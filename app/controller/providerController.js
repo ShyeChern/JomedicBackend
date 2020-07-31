@@ -126,70 +126,59 @@ const securityCheckPost = function (req, res) {
                 break;
 
             // Contact Us
-            // case 'CONTACT':
-            //     if (!data.CustomerId || !data.Subject || !data.Content) {
-            //         let responseData = {
-            //             result: false,
-            //             value: "Empty Data Detected",
-            //         }
-            //         res.send(responseData);
-            //         res.end();
-            //     }
-            //     else {
-            //  JomProvider.getEmail(data.CustomerId, function (err, modelRes) {
-            //             if (err) {
-            //                 console.log(err);
+            case 'CONTACT':
+                if (!data.user_id || !data.subject || !data.content) {
+                    let responseData = {
+                        result: false,
+                        value: "Empty Data Detected",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    JomProvider.getEmail(data.user_id, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            var email = {
+                                receiver: modelRes.data[0].email,
+                                subject: 'JomMedic - Contact Us',
+                                text: 'We have received your email. Our staff will contact you soon.',
+                                sender: process.env.EMAIL_USER,
+                                user: process.env.EMAIL_USER,
+                                pass: process.env.EMAIL_PASS
+                            };
 
-            //                 let responseData = {
-            //                     result: false,
-            //                     value: "Error: " + err.errno + " " + err.code,
-            //                 }
+                            EmailHelper.sendGG(email, function (err, result) {
+                                if (err) {
+                                    console.log(err);
+                                    let responseData = {
+                                        result: false,
+                                        value: "Fail to send email",
+                                    }
 
-            //                 res.send(responseData);
-            //                 res.end();
-            //             }
-            //             else {
-            //                 var transporter = nodemailer.createTransport({
-            //                     service: 'gmail',
-            //                     auth: {
-            //                         user: 'fashiononfire123@gmail.com',
-            //                         pass: 'fashion123!'
-            //                     }
-            //                 });
-
-            //                 var mailOptions = {
-            //                     // user email
-            //                     // modelRes.data[0].email
-            //                     from: modelRes.data[0].email,
-            //                     to: 'chern-97@hotmail.com',
-            //                     subject: data.Subject,
-            //                     text: data.Content
-            //                 };
-
-            //                 transporter.sendMail(mailOptions, function (err, info) {
-            //                     if (err) {
-            //                         console.log(err);
-            //                         let responseData = {
-            //                             result: false,
-            //                             value: "Fail to send email",
-            //                         }
-
-            //                         res.send(responseData);
-            //                         res.end();
-            //                     }
-            //                     else {
-            //                         let responseData = {
-            //                             result: true,
-            //                         }
-            //                         res.send(responseData);
-            //                         res.end();
-            //                     }
-            //                 });
-            //             }
-            //         });
-            //     }
-
-            //     break;
+                                    res.send(responseData);
+                                    res.end();
+                                }
+                                else {
+                                    let responseData = {
+                                        result: true,
+                                    }
+                                    res.send(responseData);
+                                    res.end();
+                                }
+                            });
+                        }
+                    });
+                }
+                break;
 
             // Save Order Master (Insert/Update)
             case "MEDORDER001":
@@ -2260,8 +2249,8 @@ const securityCheckPost = function (req, res) {
             // Send Prescription Slip to Patient Email
             case 'MEDORDER073':
                 // Validate the prescription slip request
-                if ((!datas.hfc_cd || !datas.pmi_no || !datas.order_no || !datas.health_facility_code) ||
-                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.order_no == "" || datas.health_facility_code == "")) {
+                if ((!datas.hfc_cd || !datas.pmi_no || !datas.order_no) ||
+                    (datas.hfc_cd == "" || datas.pmi_no == "" || datas.order_no == "")) {
                     MM.showMessage("B", function (dataMM) {
                         res.status(400).send(dataMM);
                         res.end();
@@ -2372,7 +2361,7 @@ const securityCheckPost = function (req, res) {
                                         attachments: {
                                             fileName: 'PrescriptionSlip-' + datas.order_no + '.pdf',
                                             content: prescriptionSlip,    // The pdf doc from pdfGenerator
-                                            contentType: 'application/pdf',                                            
+                                            contentType: 'application/pdf',
                                         },
                                         sender: process.env.EMAIL_USER,
                                         user: process.env.EMAIL_USER,

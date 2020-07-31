@@ -57,25 +57,22 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
                 columns: [
                     {
                         text: [
-                            // { text: 'Order ID: ', bold: true }, 'ODR0000001',
-                            // { text: '\nOrder Date: ', bold: true }, '10/07/2020',
                             { text: 'Order ID: ', bold: true }, medicationMaster.ORDER_NO,
                             { text: '\nOrder Date: ', bold: true }, moment(medicationMaster.ORDER_DATE).format("DD/MM/YYYY"),
                             { text: '\nMedication Order Type: ', bold: true }, 'Controlled',
                         ],
                     },
                     {
-                        text: [
-                            { text: 'Collect Medication At: \n', bold: true },
-                            // { text: 'Klinik Kesihatan UTeM Kampus Induk', fontSize: 16 }, '\n',
-                            // { text: 'Jalan UTeM, Taman UTeM, 76100 Durian Tunggal, Melaka', fontSize: 11 }, '\n',
-                            // { text: '2.3104 °N, 102.3174 °E', fontSize: 10 },
+                        // text: [
+                        //     { text: 'Collect Medication At: \n', bold: true },
+                        //     { text: 'Klinik Kesihatan UTeM Kampus Induk', fontSize: 16 }, '\n',
+                        //     { text: 'Jalan UTeM, Taman UTeM, 76100 Durian Tunggal, Melaka', fontSize: 11 }, '\n',
+                        //     { text: '2.3104 °N, 102.3174 °E', fontSize: 10 },
 
-                            // { text: facility.hfc_name, fontSize: 16 }, '\n',
-                            // { text: facility.address1 + " " + facility.address2 + " " + facility.address3, fontSize: 11 }, '\n',
-                            // { text: facility.latitude + ' °N, ' + facility.longitude + ' °E', fontSize: 10 },
-
-                        ]
+                        //     { text: facility.hfc_name, fontSize: 16 }, '\n',
+                        //     { text: facility.address1 + " " + facility.address2 + " " + facility.address3, fontSize: 11 }, '\n',
+                        //     { text: facility.latitude + ' °N, ' + facility.longitude + ' °E', fontSize: 10 },
+                        // ]
                     }
                 ]
             },
@@ -86,20 +83,13 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
                 columns: [
                     {
                         text: [
-                            // { text: 'Patient Name: ', bold: true }, 'Lee Ming Ming, Ms.',
-                            // { text: '\nGender: ', bold: true }, 'Female',
-                            // { text: '\nNationality: ', bold: true }, 'Malaysian',
-
                             { text: 'Patient Name: ', bold: true }, patient.name,
                             { text: '\nGender: ', bold: true }, patient.gender_cd,
-
+                            // { text: '\nNationality: ', bold: true }, 'Malaysian',
                         ]
                     },
                     {
                         text: [
-                            // { text: 'D.O.B: ', bold: true }, '12/01/1998',
-                            // { text: '\nAge: ', bold: true }, '24',
-
                             { text: 'D.O.B: ', bold: true }, moment(patient.DOB).format("DD/MM/YYYY"),
                             { text: '\nAge: ', bold: true }, calculateAge(patient.DOB),
 
@@ -116,12 +106,6 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
                     widths: [150, 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                     headerRows: 1,
                     body: tableBody
-                    // body: [
-                    //     [{ text: 'Drug Desc', style: 'tableHeader' }, { text: 'Strength', style: 'tableHeader' }, { text: 'Dosage', style: 'tableHeader' }, { text: 'Route', style: 'tableHeader' }, { text: 'Frequency', style: 'tableHeader' }, { text: 'Order Qty', style: 'tableHeader' }, { text: 'Duration', style: 'tableHeader' }],
-
-                    //     ['Paracetamol 250 mg Tablet', '250mg', '1 Tab', 'ORAL', 'Twice a day', '28 tabs', '14 day(s)'],
-                    //     ['Pantoprazole 40 mg Tablet', '40mg', '1 Tab', 'ORAL', 'Once Daily', '14 tabs', '14 day(s)'],
-                    // ]
                 },
                 layout: 'lightHorizontalLines'
 
@@ -137,8 +121,6 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
                     {
                         text: [
                             { text: 'Prescribed By: ', bold: true, marginTop: 10 },
-                            // '\n' + 'Dr. Jameson Cobra',
-                            // '\n' + 'Klinik Kesihatan UTeM Kampus Induk',
                             '\n' + doctor.tenant_name,
                         ]
                     }
@@ -186,11 +168,6 @@ var generatePdf = (patient, doctor, medicationMaster, medications) => {
 var calculateAge = (DOB) => {
     return moment().diff(DOB, 'year')
 }
-
-// PdfGenerator.generatePrescription = function (patient, doctor, hfc, medicationMaster, medications) {
-//     // Initialize Data
-//     return generatePdf(patient[0], doctor[0], hfc[0], medicationMaster[0], medications);
-// }
 
 PdfGenerator.generatePrescription = function (patient, doctor, medicationMaster, medications) {
     // Initialize Data
