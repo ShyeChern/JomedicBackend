@@ -1,76 +1,113 @@
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-var EmailHelper = function(rep) {
-    this.receiver = rep.receiver;
+var EmailHelper = function (rep) {
+  this.receiver = rep.receiver;
+};
+
+//biocore smtp
+EmailHelper.sendGB = function (data, result) {
+  //data : - receiver , subject , text
+
+  // using biocore smtp
+  const transporter = nodemailer.createTransport({
+    pool: true,
+    host: "smtp01.utem.edu.my",
+    port: 587,
+    secure: false, // use TLS
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.BIOCORE_ID,
+    to: data.receiver,
+    subject: data.subject,
+    text: data.text,
   };
 
-  //biocore smtp
-  EmailHelper.sendGB = function(data, result) {
-    //data : - receiver , subject , text
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error('there was an error: ', err);
+      result(err, null);
+    } else {
+      result(null, response);
+    }
+  });
+};
 
-    // using biocore smtp
-    const transporter = nodemailer.createTransport({
-        pool: true,
-        host: "smtp01.utem.edu.my",
-        port: 587,
-        secure: false, // use TLS
-        tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-        },
-      });
+// gmail smtp
+EmailHelper.sendGG = function (data, result) {
 
-    const mailOptions = {
-        from: process.env.BIOCORE_ID,
-        to: data.receiver,
-        subject: data.subject,
-        text:data.text,
-      };
+  const transporter = nodemailer.createTransport({
+    pool: true,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // use TLS
+    auth: {
+      user: data.user,
+      pass: data.pass
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
+    },
+  });
 
-      transporter.sendMail(mailOptions, (err, response) => {
-        if (err) {
-          console.error('there was an error: ', err);
-          result(err, null);
-        } else {
-          result(null, response);
-        }
-      });
+  const mailOptions = {
+    from: data.sender,
+    to: data.receiver,
+    subject: data.subject,
+    text: data.text,
   };
 
-  // gmail smtp
-  EmailHelper.sendGG = function(data, result) {
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error('email sending error: ', err);
+      result(err, null);
+    } else {
+      result(null, response);
+    }
+  });
+};
 
-    const transporter = nodemailer.createTransport({
-        pool: true,
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // use TLS
-        auth:{
-            user: data.user,
-            pass: data.pass
-        },
-        tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-        },
-      });
+// gmail smtp with attachments
+EmailHelper.sendGGWithAttachments = function (data, result) {
 
-    const mailOptions = {
-        from: data.sender,
-        to: data.receiver,
-        subject: data.subject,
-        text:data.text,
-      };
+  const transporter = nodemailer.createTransport({
+    pool: true,
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // use TLS
+    auth: {
+      user: data.user,
+      pass: data.pass
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
+    },
+  });
 
-      transporter.sendMail(mailOptions, (err, response) => {
-        if (err) {
-          console.error('email sending error: ', err);
-          result(err, null);
-        } else {
-          result(null, response);
-        }
-      });
+  const mailOptions = {
+    from: data.sender,
+    to: data.receiver,
+    subject: data.subject,
+    text: data.text,
+    attachments: data.attachments
   };
+
+  transporter.sendMail(mailOptions, (err, response) => {
+    if (err) {
+      console.error('email sending error: ', err);
+      result(err, null);
+    } else {
+      result(null, response);
+    }
+  });
+};
+
 
 module.exports = EmailHelper;

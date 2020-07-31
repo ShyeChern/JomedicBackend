@@ -2301,4 +2301,96 @@ providerModel.cancelAppointment = function (newData, tstamp, result) {
     });
 };
 
+// Get User and User Profile Data with Id Number, for Pdf Generation
+providerModel.getUserDataWithId = function (id_number, resolve, reject) {
+    var sql = "SELECT * FROM jlk_user_profile WHERE id_number=?;"
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, id_number, function (err, res) {
+            if (err) {
+                con.destroy();
+                return reject(err);
+            } else {
+                con.destroy();
+                return resolve(res);
+            }
+        });
+    });
+}
+
+// Get Tenant Data with Tenant Id, for Pdf purposes
+providerModel.getTenantWithTenantId = function (tenant_id, resolve, reject) {
+    var sql = "SELECT * FROM jlk_tenant WHERE tenant_id=?;";
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, tenant_id, function (err, res) {
+            if (err) {
+                con.destroy();
+                return reject(err);
+            } else {
+                con.destroy();
+                return resolve(res);
+            }
+        });
+    });
+}
+
+// Select medication order master data for a consultation session from pmi_order_master, for Pdf Generation
+providerModel.getMedicationMasterPromise = function (order_no, pmi_no, resolve, reject) {
+
+    var sql = "SELECT * FROM pis_order_master WHERE order_no=? AND pmi_no=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql,
+            [order_no, pmi_no],
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    return reject(err);
+                } else {
+                    con.destroy();
+                    return resolve(res);
+                }
+            });
+    });
+};
+
+// Select medications from database for a consultation session, for Pdf generation
+providerModel.getMedicationsPromise = function (order_no, resolve, reject) {
+
+    var sql = "SELECT * FROM pis_order_detail WHERE order_no=?;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, order_no,
+            function (err, res) {
+                if (err) {
+                    con.destroy();
+                    return reject(err);
+                } else {
+                    con.destroy();
+                    return resolve(res);
+                }
+            });
+    });
+};
+
+// Get health facility data with hfc code
+providerModel.getHealthFacility = function (hfc_cd, resolve, reject) {
+    var sql = "SELECT * from adm_health_facility where hfc_cd=?;";
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, hfc_cd, function (err, res) {
+            if (err) {
+                con.destroy();
+                return reject(err);
+            } else {
+                con.destroy();
+                return resolve(res);
+            }
+        });
+    });
+}
+
 module.exports = providerModel;
