@@ -548,7 +548,7 @@ customerModel.chatEnded = function (OrderNo, result) {
             }
             else {
                 con.release();
-                customerModel.makePayment(CustomerId, 1);
+                // customerModel.makePayment(CustomerId, 1);
                 result(null, { result: true, data: res });
 
             }
