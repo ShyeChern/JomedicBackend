@@ -126,29 +126,25 @@ const securityCheckPost = function (req, res) {
                 break;
 
             // Contact Us
-            case 'CONTACT':
-                if (!data.user_id || !data.subject || !data.content) {
-                    let responseData = {
-                        result: false,
-                        value: "Empty Data Detected",
-                    }
-                    res.send(responseData);
-                    res.end();
+            case "CONTACT":
+                if (!datas.user_id || !datas.subject || !datas.content || datas.user_id == "" || datas.subject == "" || datas.content == "") {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
                 }
                 else {
-                    JomProvider.getEmail(data.user_id, function (err, modelRes) {
+                    JomProvider.getEmail(datas.user_id, function (err, modelRes) {
                         if (err) {
-                            console.log(err);
-                            let responseData = {
-                                result: false,
-                                value: "Error: " + err.errno + " " + err.code,
-                            }
-                            res.send(responseData);
-                            res.end();
+                            console.log(err)
+                            MM.showMessage(err.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
                         }
                         else {
                             var email = {
-                                receiver: modelRes.data[0].email,
+                                receiver: modelRes[0].email,
                                 subject: 'JomMedic - Contact Us',
                                 text: 'We have received your email. Our staff will contact you soon.',
                                 sender: process.env.EMAIL_USER,
@@ -158,21 +154,17 @@ const securityCheckPost = function (req, res) {
 
                             EmailHelper.sendGG(email, function (err, result) {
                                 if (err) {
-                                    console.log(err);
-                                    let responseData = {
-                                        result: false,
-                                        value: "Fail to send email",
-                                    }
-
-                                    res.send(responseData);
-                                    res.end();
+                                    console.log(err)
+                                    MM.showMessage(err.code, function (dataMM) {
+                                        res.send(dataMM);
+                                        res.end();
+                                    });
                                 }
                                 else {
-                                    let responseData = {
-                                        result: true,
-                                    }
-                                    res.send(responseData);
-                                    res.end();
+                                    MM.showMessage("1", function (dataMM) {
+                                        res.send(dataMM);
+                                        res.end();
+                                    });
                                 }
                             });
                         }

@@ -146,7 +146,7 @@ providerModel.getEmail = function (UserId, result) {
             }
             else {
                 con.release();
-                result(null, { result: true, data: res });
+                result(null, res);
             }
         });
     });
