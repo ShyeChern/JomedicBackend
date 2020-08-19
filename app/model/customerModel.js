@@ -315,9 +315,9 @@ customerModel.doctorDetail = function (DoctorId, CustomerId, result) {
         "INNER JOIN jlk_jomedic_specialty s ON t.tenant_id = s.tenant_id " +
         "LEFT JOIN jlk_health_facility h ON h.tenant_id = t.tenant_id " +
         "WHERE t.tenant_id = ? ;" +
-        "SELECT DATE_FORMAT(start_date, '%d / %m / %Y') AS start_date, DATE_FORMAT(start_date, '%a') AS week, " +
+        "SELECT DATE_FORMAT(start_date, '%d / %m / %Y') AS start_date, DATE_FORMAT(start_date, '%a') AS week, start_date AS sort," +
         "DATE_FORMAT(start_time, '%H:%i') AS start_time, DATE_FORMAT(end_time, '%H:%i') AS end_time, status, " +
-        "quota FROM pms_duty_roster WHERE hfc_cd=? AND start_date>=CURDATE() + INTERVAL 1 DAY ORDER BY start_date LIMIT 7;" +
+        "quota FROM pms_duty_roster WHERE hfc_cd=? AND start_date>=CURDATE() + INTERVAL 1 DAY ORDER BY sort LIMIT 7;" +
         // "SELECT available_amt FROM ewl_account WHERE user_id=(SELECT user_id FROM jlk_customer_acc WHERE customer_id=?);"+
         "COMMIT;";
 
@@ -747,11 +747,11 @@ customerModel.makeAppointment = function (CustomerId, DoctorId, Date, Time, Orde
 
 customerModel.appointment = function (CustomerId, result) {
 
-    var sql = "SELECT DATE_FORMAT(a.appointment_date, '%b %d (%a)') AS appointment_date, DATE_FORMAT(a.start_time, '%H:%i') AS start_time, " +
+    var sql = "SELECT DATE_FORMAT(a.appointment_date, '%Y-%m-%d') AS appointment_date, DATE_FORMAT(a.start_time, '%H:%i') AS start_time, " +
         "a.order_no, t.tenant_id, t.tenant_name, t.longtitude, t.latitude, CONCAT(t.tenant_address1, ', ', t.tenant_address2, ', ', t.tenant_address3) AS address " +
         "FROM pms_appointment a INNER JOIN jlk_tenant t ON a.hfc_cd=t.tenant_id " +
         "WHERE a.status='active' AND a.pmi_no=(SELECT user_id FROM jlk_customer_acc WHERE customer_id=?) " +
-        "AND appointment_date >= CURDATE() AND appointment_date <= CURDATE() + INTERVAL 6 DAY ORDER BY appointment_date";
+        "AND appointment_date >= CURDATE() ORDER BY appointment_date";
 
     pool.getConnection(function (err, con) {
         if (err) throw err;
