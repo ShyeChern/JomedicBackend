@@ -690,10 +690,10 @@ providerModel.getMessageQueueData = function (order_no, result) {
     });
 };
 
-// Select pending message queue data only 
+// Select pending or active message queue data only 
 providerModel.getMessageQueueDataPending = function (order_no, result) {
 
-    var sql = "SELECT * FROM jlk_message_queue WHERE order_no=? AND order_status='pending';"
+    var sql = "SELECT * FROM jlk_message_queue WHERE order_no=? AND (order_status='pending' OR order_status='active');"
 
     pool.getConnection(function (errs, con) {
         if (errs) throw errs; // not connected!
