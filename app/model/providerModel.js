@@ -2393,4 +2393,46 @@ providerModel.getHealthFacility = function (hfc_cd, resolve, reject) {
     });
 }
 
+// Check EWallet Authtentication
+providerModel.checkEWalletAuth = function (newData, result) {
+    var sql = "SELECT * FROM ewl_account WHERE user_id=?;"
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, [newData.user_id], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "OK");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "EMAILXDE");
+                }
+            }
+        });
+    });
+};
+
+// Update EWallet Amount
+providerModel.updateEWalletAmount = function (newData, result) {
+
+    var sql = "UPDATE ewl_account SET available_amt=available_amt+? WHERE user_id=?;"
+    pool.getConnection(function (errs, con) {
+        if (errs) throw errs; // not connected!
+        con.query(sql, [newData.payment, newData.user_id], function (err, res) {
+            if (err) {
+                console.log(err)
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                result(null, res);
+            }
+        });
+    });
+}
+
+
 module.exports = providerModel;
