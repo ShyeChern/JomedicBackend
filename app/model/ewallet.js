@@ -280,6 +280,23 @@ Ewallet.getEwlAcc = function(data,result){
   });
 }
 
+//get ewallet account with ewallet acc no
+Ewallet.getEwlAcc1 = function(data,result){
+  pool.getConnection(function(err, con) {
+    if (err) throw err; // not connected!
+    var sql = "SELECT user_id,ewallet_acc_no,bank_acc_no,credit_card_no,available_amt,freeze_amt,float_amt,currency_cd,status FROM ewl_account WHERE ewallet_acc_no = '"+data.ewallet_acc_no+"'";
+    con.query(sql, function(errs, ress) {
+    if (errs) {
+      con.destroy();
+      result(errs, null);
+    } else {
+      con.destroy();
+      result(null, ress);
+    }
+  });
+  });
+}
+
 //insert ewl_reload_pin
 Ewallet.insertReloadPin = function(data,result){
   pool.getConnection(function(err, con) {
