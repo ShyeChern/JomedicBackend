@@ -2388,6 +2388,43 @@ const securityCheckPost = function (req, res) {
                 }
                 break;
 
+            // Receive the payment from customer
+            case 'MEDORDER074':
+                if ((!datas.user_id || !datas.payment) || (datas.user_id == "" || datas.payment == "")) {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.checkEWalletAuth(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "OK") {
+                                JomProvider.updateEWalletAmount(datas, function (errs, datas) {
+                                    if (errs) {
+                                        MM.showMessage(errs.code, function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    }
+                                })
+                            } else if (dataBack === "EMAILXDE") {
+                                MM.showMessage("EXDE", function (dataMM) {
+                                    res.send(dataMM);
+                                    res.end();
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
             default:
                 MM.showMessage("TXN", function (dataMM) {
                     res.send(dataMM);

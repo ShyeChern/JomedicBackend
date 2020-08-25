@@ -581,7 +581,7 @@ providerModel.getCallHistory = function (user_id, tenant_id, result) {
 providerModel.getOrderQueue = function (tenant_id, result) {
 
     var sql = "SELECT up.name, up.DOB, up.district, up.state, up.country, up.nationality_cd, up.picture, up.id_number, up.email, up.mobile_no, mq.txn_code, mq.order_no, mq.txn_date, up.user_id FROM jlk_message_queue mq " +
-        "LEFT JOIN jlk_user_profile up ON mq.user_id=up.user_id WHERE mq.receiver_id=? AND mq.order_status='pending' ORDER BY mq.order_no ASC"
+        "LEFT JOIN jlk_user_profile up ON mq.user_id=up.user_id WHERE mq.receiver_id=? AND (mq.order_status='pending' OR mq.order_status='active') ORDER BY mq.order_no ASC;"
 
     pool.getConnection(function (errs, con) {
         if (errs) throw errs; // not connected!
@@ -2392,5 +2392,47 @@ providerModel.getHealthFacility = function (hfc_cd, resolve, reject) {
         });
     });
 }
+
+// Check EWallet Authtentication
+providerModel.checkEWalletAuth = function (newData, result) {
+    var sql = "SELECT * FROM ewl_account WHERE user_id=?;"
+    pool.getConnection(function (err, con) {
+        if (err) throw err; // not connected!
+        con.query(sql, [newData.user_id], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                if (res[0] || !res[0] == undefined) {
+                    //convert buffer to string 
+                    result(null, "OK");
+                } else if (!res[0] || res[0] == undefined) {
+                    result(null, "EMAILXDE");
+                }
+            }
+        });
+    });
+};
+
+// Update EWallet Amount
+providerModel.updateEWalletAmount = function (newData, result) {
+
+    var sql = "UPDATE ewl_account SET available_amt=available_amt+? WHERE user_id=?;"
+    pool.getConnection(function (errs, con) {
+        if (errs) throw errs; // not connected!
+        con.query(sql, [newData.payment, newData.user_id], function (err, res) {
+            if (err) {
+                console.log(err)
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                result(null, res);
+            }
+        });
+    });
+}
+
 
 module.exports = providerModel;
