@@ -105,7 +105,6 @@ providerModel.getUserData = function (user_id, result) {
             }
         });
     });
-
 }
 
 // Change Account Password
@@ -2434,5 +2433,48 @@ providerModel.updateEWalletAmount = function (newData, result) {
     });
 }
 
+// Get user and user profile data with image as blob
+providerModel.getUserData2 = function (user_id, result) {
+
+    var sql = "SELECT u.user_id, u.user_name, u.title, u.user_status, u.login_status, u.id_category_cd, u.start_date, u.end_date, u.remote_logout_date, u.remote_count, "
+        + "u.user_type, u.user_category, u.user_classification_cd, u.status, u.room_no, up.name, up.id_type, up.id_number, up.gender_cd, up.nationality_cd, up.DOB, up.occupation_cd, up.home_address1, up.home_address2, "
+        + "up.home_address3, up.district, up.state, up.country, up.postcode, up.mobile_no, up.email, up.picture, up.id_img FROM jlk_users u LEFT JOIN jlk_user_profile up ON u.user_id=up.user_id WHERE u.user_id=?;"
+
+    pool.getConnection(function (errs, con) {
+        if (errs) throw errs; // not connected!
+        con.query(sql, user_id, function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                result(null, res);
+            }
+        });
+    });
+}
+
+// Update user profile data with image as blob
+providerModel.updateUserProfile2 = function (newData, picture, result) {
+    var sql = "UPDATE jlk_user_profile SET title=?,name=?,id_type=?,id_number=?,gender_cd=?,nationality_cd=?,DOB=?,occupation_cd=?,home_address1=?,home_address2=?,home_address3=?,district=?,state=?,country=?,postcode=?,mobile_no=?,email=?,picture=?,id_img=? WHERE user_id=?;"
+
+    pool.getConnection(function (errs, con) {
+        if (errs) throw errs; // not connected!
+        con.query(sql, [newData.title, newData.name, newData.id_type, newData.id_number, newData.gender, newData.nationality_cd,
+        newData.DOB, newData.occupation_cd, newData.home_address1, newData.home_address2, newData.home_address3, newData.district,
+        newData.state, newData.country, newData.postcode, newData.mobile_no, newData.email, picture, newData.id_img,
+        newData.user_id],
+            function (errss, resss) {
+                if (errss) {
+                    console.log(errss)
+                    con.destroy();
+                    result(errss, null);
+                } else {
+                    con.destroy();
+                    result(null, resss);
+                }
+            });
+    });
+}
 
 module.exports = providerModel;

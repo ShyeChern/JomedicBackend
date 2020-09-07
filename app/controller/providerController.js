@@ -2337,6 +2337,43 @@ const securityCheckPost = function (req, res) {
                                 if (pResults.every(element => element === null)) {
                                     var prescriptionSlip = null;
 
+                                    // Skip pdf generation if no medication master data is detected (No medications are prescribed)
+                                    if (!medicationMasterData) {
+                                        // Return success if medicationmaster is falsey 
+                                        MM.showMessage("1", function (dataMM) {
+                                            res.send(dataMM);
+                                            res.end();
+                                        });
+                                    } else {
+                                        // Return success if medicationmaster is empty object or empty array
+                                        if (typeof (medicationMasterData) === 'object') {
+                                            if (JSON.stringify(medicationMasterData) === '{}' || JSON.stringify(medicationMasterData) === '[]') {
+                                                MM.showMessage("1", function (dataMM) {
+                                                    res.send(dataMM);
+                                                    res.end();
+                                                });
+                                            }
+                                        }
+                                        // Check any medications prescribed
+                                        if (!medicationsData) {
+                                            // Return success if medications are falsey 
+                                            MM.showMessage("1", function (dataMM) {
+                                                res.send(dataMM);
+                                                res.end();
+                                            });
+                                        } else {
+                                            // Return success if medications are empty object or empty array
+                                            if (typeof (medicationsData) === 'object') {
+                                                if (JSON.stringify(medicationsData) === '{}' || JSON.stringify(medicationsData) === '[]') {
+                                                    MM.showMessage("1", function (dataMM) {
+                                                        res.send(dataMM);
+                                                        res.end();
+                                                    });
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     // Generate the Prescription Slip Pdf File
                                     try {
                                         prescriptionSlip = PdfGenerator.generatePrescription(patientData, doctorData, medicationMasterData, medicationsData);
@@ -2420,6 +2457,54 @@ const securityCheckPost = function (req, res) {
                                     res.end();
                                 });
                             }
+                        }
+                    });
+                }
+                break;
+
+            // Update User Profile (Rework)
+            case 'MEDORDER019-2':
+                if (!datas.user_id || datas.user_id == "") {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.updateUserProfile2(datas, req.file.buffer, function (errs, datasx) {
+                        if (errs) {
+                            MM.showMessage(errs.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage("1", function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        }
+                    });
+                }
+                break;
+
+            // Get User Profile (Rework)
+            case 'MEDORDER020-2':
+                if (!datas.user_id || datas.user_id == "") {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.getUserData2(datas.user_id, function (error, result) {
+                        if (error) {
+                            MM.showMessage(error.code, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
+                        } else {
+                            MM.showMessage(result, function (dataMM) {
+                                res.send(dataMM);
+                                res.end();
+                            });
                         }
                     });
                 }
