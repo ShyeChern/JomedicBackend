@@ -1472,6 +1472,99 @@ const custfunction = function (req, res) {
 
                 break;
 
+            case 'VIEWRATING':
+                if (!data.CustomerId) {
+                    let responseData = {
+                        result: false,
+                        value: "Empty Data Detected",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    customerModel.viewRating(data.CustomerId, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            res.send(modelRes);
+                            res.end();
+                        }
+                    });
+                }
+
+                break;
+
+            case 'PREVIOUSCHAT':
+                if (!data.CustomerId) {
+                    let responseData = {
+                        result: false,
+                        value: "Empty Data Detected",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    customerModel.previousChat(data.CustomerId, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            res.send(modelRes);
+                            res.end();
+                        }
+                    });
+                }
+
+                break;
+
+            case 'CHATHISTORY':
+                if (!data.OrderNo) {
+                    let responseData = {
+                        result: false,
+                        value: "Empty Data Detected",
+                    }
+                    res.send(responseData);
+                    res.end();
+                }
+                else {
+                    customerModel.chatHistory(data.OrderNo, function (err, modelRes) {
+                        if (err) {
+                            console.log(err);
+
+                            let responseData = {
+                                result: false,
+                                value: "Error: " + err.errno + " " + err.code,
+                            }
+
+                            res.send(responseData);
+                            res.end();
+                        }
+                        else {
+                            res.send(modelRes);
+                            res.end();
+                        }
+                    });
+                }
+
+                break;
+
             case 'LOGOUT':
                 if (!data.CustomerId) {
                     let responseData = {

@@ -1035,6 +1035,70 @@ customerModel.changePassword = function (CustomerId, OldPassword, NewPassword, r
 
 };
 
+customerModel.viewRating = function (CustomerId, result) {
+    var sql = "SELECT f.txn_date, f.order_no, f.rating, f.comments, p.name, p.picture " +
+        "FROM jlk_feedback f INNER JOIN jlk_user_profile p ON f.feedback_by = p.user_id " +
+        "WHERE f.feedback_to = (SELECT user_id FROM jlk_customer_acc WHERE customer_id=?) ORDER BY f.txn_date DESC;"
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [CustomerId], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            }
+            else {
+                con.release();
+                result(null, { result: true, data: res });
+            }
+        });
+    });
+};
+
+customerModel.previousChat = function (CustomerId, result) {
+    var sql = "SELECT c.order_no, u.name, u.picture, s.specialty_cd, m.txn_date " +
+        "FROM jlk_chat_history c INNER JOIN jlk_user_profile u ON c.receiver_id = u.user_id " +
+        "INNER JOIN jlk_jomedic_specialty s ON s.tenant_id = c.receiver_id " +
+        "INNER JOIN jlk_message_queue m ON m.order_no = c.order_no " +
+        "WHERE c.sender_id=(SELECT user_id FROM jlk_customer_acc WHERE customer_id=?) " +
+        "GROUP BY c.order_no ORDER BY m.txn_date DESC";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [CustomerId], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            }
+            else {
+                con.release();
+                result(null, { result: true, data: res });
+            }
+        });
+    });
+
+};
+
+customerModel.chatHistory = function (orderNo, result) {
+    var sql = "SELECT DATE_FORMAT(message_id, '%H:%i') AS message_id, message, user_type " +
+        "FROM jlk_chat_history " +
+        "WHERE order_no=? ORDER BY message_id";
+
+    pool.getConnection(function (err, con) {
+        if (err) throw err;
+        con.query(sql, [orderNo], function (err, res) {
+            if (err) {
+                con.destroy();
+                result(err, null);
+            }
+            else {
+                con.release();
+                result(null, { result: true, data: res });
+            }
+        });
+    });
+
+};
 
 customerModel.logout = function (CustomerId, result) {
     var sql = "UPDATE jlk_users u " +
