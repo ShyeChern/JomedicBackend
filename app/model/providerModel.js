@@ -2433,6 +2433,24 @@ providerModel.updateEWalletAmount = function (newData, result) {
     });
 }
 
+// Insert EWallet Account
+providerModel.insertEWallet = function (newData, eWalletId, result) {
+    var sql = "INSERT INTO ewl_account (user_id, ewallet_acc_no, available_amt, freeze_amt, float_amt, currency_cd, status) VALUES (?,?,?,?,?,?,?)";
+    pool.getConnection(function (errs, con) {
+        if (errs) throw errs; // not connected!
+        con.query(sql, [newData.user_id, eWalletId, 0, 0, 0, '001', '001'], function (err, res) {
+            if (err) {
+                console.log(err)
+                con.destroy();
+                result(err, null);
+            } else {
+                con.destroy();
+                result(null, res);
+            }
+        });
+    });
+}
+
 // Get user and user profile data with image as blob
 providerModel.getUserData2 = function (user_id, result) {
 

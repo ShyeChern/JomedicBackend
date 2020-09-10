@@ -5,6 +5,8 @@ var MM = require('../model/util/MessageManager');
 var md5 = require('md5');
 var EmailHelper = require('../model/Util/EmailHelper');
 const PdfGenerator = require("../model/Util/PdfGenerator");
+var moment = require('moment');
+var fetch = require('node-fetch');
 
 require('dotenv').config();
 
@@ -14,6 +16,25 @@ var newMM;
 // req: things requested by frontend
 // res: things send to frontend as response
 const securityCheckPost = function (req, res) {
+
+    function generateId(UNQ) {
+        let bodyData = {
+            txn_cd: 'UNQGEN',
+            tstamp: moment().format('yyyy-mm-dd HH:MM:ss'),
+            data: {
+                UNQ: UNQ,
+            }
+        };
+
+        return fetch('http://157.245.148.221:3001/UNQ', {
+            method: 'POST',
+            headers: {
+                // Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bodyData),
+        }).then((response) => response.text())
+    }
 
     var txn_cd, datas, tstamp;
     txn_cd = req.body['txn_cd'];
@@ -2453,6 +2474,47 @@ const securityCheckPost = function (req, res) {
                                 })
                             } else if (dataBack === "EMAILXDE") {
                                 MM.showMessage("EXDE", function (dataMM) {
+                                    res.send(dataMM);
+                                    res.end();
+                                });
+                            }
+                        }
+                    });
+                }
+                break;
+
+            // Validate EWallet
+            case 'MEDORDER075':
+                if (!datas.user_id || datas.user_id == "") {
+                    MM.showMessage("B", function (dataMM) {
+                        res.status(400).send(dataMM);
+                        res.end();
+                    });
+                } else {
+                    JomProvider.checkEWalletAuth(datas, function (error, dataBack) {
+                        if (error) {
+                            res.send({ status: err.code });
+                        } else {
+                            if (dataBack === "EMAILXDE") {
+                                Promise.all([generateId("EWL")]).then(
+                                    ([eWalletId]) => {
+                                        JomProvider.insertEWallet(datas, eWalletId, function (errs, datas) {
+                                            if (errs) {
+                                                MM.showMessage(errs.code, function (dataMM) {
+                                                    res.send(dataMM);
+                                                    res.end();
+                                                });
+                                            } else {
+                                                MM.showMessage("1", function (dataMM) {
+                                                    res.send(dataMM);
+                                                    res.end();
+                                                });
+                                            }
+                                        })
+                                    }
+                                )
+                            } else if (dataBack === "OK") {
+                                MM.showMessage("1", function (dataMM) {
                                     res.send(dataMM);
                                     res.end();
                                 });
